@@ -1,4 +1,4 @@
-package com.android.find.ui.theme
+package com.find.android.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
