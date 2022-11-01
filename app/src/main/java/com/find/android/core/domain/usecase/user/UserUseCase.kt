@@ -3,7 +3,7 @@ package com.find.android.core.domain.usecase.user
 import androidx.compose.runtime.MutableState
 import com.find.android.core.domain.model.UserModel
 
-interface UserHelper {
+interface UserUseCase {
 
     val userUid: String
 

@@ -10,9 +10,9 @@ import com.google.android.gms.location.*
 import javax.inject.Inject
 
 @SuppressLint("MissingPermission")
-class ActivityDetectServiceImpl @Inject constructor(
+class ActivityRecognitionServiceImpl @Inject constructor(
     private val client: ActivityRecognitionClient
-) : ActivityDetectService {
+) : ActivityRecognitionService {
 
     override fun requestActivityTransitionUpdates(activity: FindActivity) {
         val request = ActivityTransitionRequest(getTransitions())
@@ -29,26 +29,18 @@ class ActivityDetectServiceImpl @Inject constructor(
             .addOnFailureListener { e: Exception -> }
     }
 
+    private val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            PendingIntent.FLAG_MUTABLE else PendingIntent.FLAG_IMMUTABLE
 
     private fun getPendingIntent(activity: FindActivity): PendingIntent {
         val intent = Intent(activity, ActivityRecognitionReceiver::class.java)
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
+        return PendingIntent.getBroadcast(
                 activity,
                 REQUEST_CODE_INTENT_ACTIVITY_TRANSITION,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+                PendingIntent.FLAG_UPDATE_CURRENT or flag
             )
-        } else {
-            PendingIntent.getBroadcast(
-                activity,
-                REQUEST_CODE_INTENT_ACTIVITY_TRANSITION,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-        }
     }
-
 
     override fun getTransitions(): MutableList<ActivityTransition> {
         val transitions = mutableListOf<ActivityTransition>()

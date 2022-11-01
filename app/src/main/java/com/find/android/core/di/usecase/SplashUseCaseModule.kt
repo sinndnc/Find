@@ -1,7 +1,7 @@
 package com.find.android.core.di.usecase
 
-import com.find.android.core.domain.usecase.splash.CheckIsUserLoggedHelper
-import com.find.android.core.domain.usecase.splash.CheckIsUserLoggedHelperImpl
+import com.find.android.core.domain.usecase.splash.SplashUseCase
+import com.find.android.core.domain.usecase.splash.SplashUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,5 +14,5 @@ abstract class SplashUseCaseModule(){
 
     @Binds
     @Singleton
-    abstract fun bindIsUserLoggedUseCase( checkIsUserLoggedImpl: CheckIsUserLoggedHelperImpl) : CheckIsUserLoggedHelper
+    abstract fun bindIsUserLoggedUseCase( checkIsUserLoggedImpl: SplashUseCaseImpl) : SplashUseCase
 }

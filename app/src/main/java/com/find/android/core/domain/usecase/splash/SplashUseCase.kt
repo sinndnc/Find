@@ -1,5 +1,5 @@
 package com.find.android.core.domain.usecase.splash
 
-interface CheckIsUserLoggedHelper {
+interface SplashUseCase {
     operator fun invoke(): Boolean
 }

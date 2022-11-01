@@ -10,11 +10,10 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class LocationSettingHelperImpl @Inject constructor(
+class LocationSettingUseCaseImpl @Inject constructor(
     private val settingsClient: SettingsClient,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-) : LocationSettingHelper {
-
+) : LocationSettingUseCase {
 
     override fun checkLocationIsEnabled(): Flow<ResponseState<Boolean?>> = flow {
         emit(ResponseState.Loading)

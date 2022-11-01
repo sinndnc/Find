@@ -14,7 +14,6 @@ class ActivityRecognitionReceiver : BroadcastReceiver() {
     @Inject
     lateinit var activityRecognitionRepository: ActivityRecognitionRepository
 
-
     override fun onReceive(context: Context, intent: Intent) {
         if (ActivityTransitionResult.hasResult(intent)) {
             restartService(context)
@@ -25,7 +24,6 @@ class ActivityRecognitionReceiver : BroadcastReceiver() {
             }
         }
     }
-
 
     private fun restartService(context: Context) {
         Log.d("LocationTest", "restartService")

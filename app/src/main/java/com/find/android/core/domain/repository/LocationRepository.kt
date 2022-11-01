@@ -1,16 +1,16 @@
 package com.find.android.core.domain.repository
 
 import android.location.Location
-import com.find.android.core.util.event.ResponseState
-import com.google.android.gms.location.LocationRequest
-import kotlinx.coroutines.flow.Flow
+import androidx.compose.runtime.MutableState
 
 interface LocationRepository {
 
-    val locationRequest: LocationRequest
+    val currentLocation: MutableState<Location>
 
-    fun getLastKnownLocation(): Flow<ResponseState<Location>>
-    fun requestLocationUpdates(): Flow<ResponseState<Location>>
-    fun getCurrentLocation(): Flow<ResponseState<Location>>
+    fun getLastKnownLocation()
+
+    fun requestLocationUpdates()
+
+    fun getCurrentLocation()
 
 }

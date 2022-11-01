@@ -13,11 +13,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-class UserHelperImpl @Inject constructor(
+class UserUseCaseImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val storageRepository: StorageRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-) : UserHelper {
+) : UserUseCase {
 
     override val userUid: String
         get() = firebaseAuth.uid!!

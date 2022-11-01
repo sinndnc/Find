@@ -1,7 +1,7 @@
 package com.find.android.core.di.usecase
 
-import com.find.android.core.domain.usecase.user.UserHelper
-import com.find.android.core.domain.usecase.user.UserHelperImpl
+import com.find.android.core.domain.usecase.user.UserUseCase
+import com.find.android.core.domain.usecase.user.UserUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,5 +14,5 @@ abstract class UserHelperModule {
 
     @Binds
     @Singleton
-    abstract fun bindUserInformation(userInformationImpl: UserHelperImpl): UserHelper
+    abstract fun bindUserInformation(userInformationImpl: UserUseCaseImpl): UserUseCase
 }
