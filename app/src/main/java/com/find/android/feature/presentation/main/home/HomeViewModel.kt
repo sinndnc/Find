@@ -7,9 +7,15 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.SwipeableState
 import androidx.lifecycle.ViewModel
+import com.find.android.core.data.local.room.entity.LocationModel
+import com.find.android.core.data.local.room.entity.User
+import com.find.android.core.domain.local.storage.LocalStorageService
 import com.find.android.core.domain.repository.ActivityRecognitionRepository
+import com.find.android.core.domain.repository.LocationRepository
+import com.find.android.core.domain.repository.StorageRepository
 import com.find.android.core.domain.usecase.location.setting.LocationSettingUseCase
 import com.find.android.core.domain.usecase.user.UserUseCase
+import com.find.android.core.util.recognition.enums.DetectedActivityEnum
 import com.find.android.feature.presentation.main.home.views.AppBarSheetState
 import com.google.android.gms.common.api.ResolvableApiException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,8 +29,9 @@ import javax.inject.Inject
 @OptIn(ExperimentalMaterialApi::class)
 class HomeViewModel @Inject constructor(
     userUseCase: UserUseCase,
+    val locationRepository: LocationRepository,
     private val locationSettingUseCase: LocationSettingUseCase,
-    private val activityRecognitionRepository: ActivityRecognitionRepository,
+    val activityRecognitionRepository: ActivityRecognitionRepository,
 ) : ViewModel() {
 
     init {

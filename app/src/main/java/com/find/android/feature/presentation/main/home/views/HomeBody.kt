@@ -4,7 +4,7 @@ import androidx.compose.animation.core.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.SwipeableState
 import androidx.compose.runtime.*
-import com.find.android.feature.component.theme.Blue500
+import com.find.android.core.util.recognition.enums.DetectedActivityEnum
 import com.find.android.feature.presentation.main.home.HomeViewModel
 import com.find.android.feature.presentation.main.home.component.barSheet.DynamicIslandState
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -22,16 +22,26 @@ fun HomeBody(
 ) {
 
     val coroutineScope = rememberCoroutineScope()
+    val currentActivity by remember { viewModel.activityRecognitionRepository.currentActivity }
+    val currentLocation by remember { viewModel.locationRepository.currentLocation }
     val cameraPositionState = rememberCameraPositionState(
         init = {
             CameraPosition.fromLatLngZoom(LatLng(40.655659, 29.281441), 15f)
         }
     )
 
+    LaunchedEffect(currentActivity) {
+        when (currentActivity) {
+            DetectedActivityEnum.STILL -> viewModel.locationRepository.getCurrentLocation()
+            else -> viewModel.locationRepository.requestLocationUpdates()
+        }
+    }
+
+
     LaunchedEffect(Unit) {
         cameraPositionState.animate(
             update = CameraUpdateFactory.newCameraPosition(
-                CameraPosition(LatLng(40.655659, 29.281441), 16f, 0f, 0f)
+                CameraPosition(LatLng(currentLocation.latitude, currentLocation.longitude), 16f, 0f, 0f)
             ),
         )
     }
@@ -45,9 +55,6 @@ fun HomeBody(
             repeatMode = RepeatMode.Reverse
         )
     )
-
-    var currentLocation by remember { mutableStateOf(viewModel.currentLocation.value) }
-    val transitionLatitude = updateTransition(currentLocation, label = "")
 
     GoogleMap(
         cameraPositionState = cameraPositionState,
@@ -63,20 +70,6 @@ fun HomeBody(
             }
         }
     ) {
-        viewModel.currentLocation.value?.let {
-            Circle(
-                center = LatLng(it.latitude,it.longitude),
-                clickable = false,
-                fillColor = Blue500.copy(0.1f),
-                radius = scale.toDouble(),
-                strokeColor = Blue500.copy(0.2f),
-                strokeWidth = 3.0f,
-            )
-            Marker(
-                state = MarkerState(LatLng(it.latitude, it.longitude)),
-
-                )
-        }
 
     }
 }

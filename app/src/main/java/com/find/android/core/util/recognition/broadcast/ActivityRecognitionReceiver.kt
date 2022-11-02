@@ -16,7 +16,6 @@ class ActivityRecognitionReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (ActivityTransitionResult.hasResult(intent)) {
-            restartService(context)
             val result = ActivityTransitionResult.extractResult(intent)!!
             for (event in result.transitionEvents) {
                 Log.d("LocationTest", "$event onReceive")
@@ -25,11 +24,6 @@ class ActivityRecognitionReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun restartService(context: Context) {
-        Log.d("LocationTest", "restartService")
-        context.stopService(Intent(context.applicationContext, LocationService::class.java)).run {
-            if (this) context.startForegroundService(Intent(context.applicationContext, LocationService::class.java))
-        }
-    }
+
 
 }

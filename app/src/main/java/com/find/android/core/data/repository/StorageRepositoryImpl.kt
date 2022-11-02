@@ -1,5 +1,6 @@
 package com.find.android.core.data.repository
 
+import com.find.android.core.data.local.room.entity.LocationModel
 import com.find.android.core.data.local.room.entity.User
 import com.find.android.core.domain.local.storage.LocalStorageService
 import com.find.android.core.domain.mapper.toUserModule
@@ -34,6 +35,11 @@ class StorageRepositoryImpl @Inject constructor(
         }
     }
 
-
+    override fun getUserLocation() : LocationModel =
+        if (!googleApi.checkIsAvailable()) {
+            remoteStorageService.getUserLocation()
+        } else {
+            localStorageService.getUSerLocation()
+        }
 
 }

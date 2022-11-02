@@ -1,6 +1,6 @@
 package com.find.android.feature.util.extension
 
-import com.find.android.core.data.repository.DetectedActivityEnum
+import com.find.android.core.util.recognition.enums.DetectedActivityEnum
 import com.google.android.gms.location.ActivityTransition
 import com.google.android.gms.location.DetectedActivity
 

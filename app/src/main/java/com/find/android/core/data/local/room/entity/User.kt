@@ -2,7 +2,7 @@ package com.find.android.core.data.local.room.entity
 
 import android.location.Location
 import androidx.room.*
-import com.find.android.core.util.recognition.enum.DetectedActivityEnum
+import com.find.android.core.util.recognition.enums.DetectedActivityEnum
 
 class ActivityTypeConverter {
 
@@ -11,8 +11,12 @@ class ActivityTypeConverter {
 
     @TypeConverter
     fun toStringFromType(activityType: String): DetectedActivityEnum = DetectedActivityEnum.valueOf(activityType)
-
 }
+
+data class LocationModel(
+    val latitude: Double,
+    val longitude: Double,
+)
 
 @Entity
 data class User(
@@ -20,7 +24,7 @@ data class User(
     @ColumnInfo(name = "name") var name: String,
     @ColumnInfo(name = "email") var email: String,
     @ColumnInfo(name = "surname") var surname: String,
-    @ColumnInfo(name = "location") var location: Location,
+    @Embedded var location: LocationModel,
     @field:TypeConverters(ActivityTypeConverter::class)
     @ColumnInfo(name = "activity type") var activityType: DetectedActivityEnum,
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB) var image: ByteArray? = null,
