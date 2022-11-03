@@ -26,7 +26,7 @@ fun HomeBody(
     val currentLocation by remember { viewModel.locationRepository.currentLocation }
     val cameraPositionState = rememberCameraPositionState(
         init = {
-            CameraPosition.fromLatLngZoom(LatLng(40.655659, 29.281441), 15f)
+            CameraPosition.fromLatLngZoom(LatLng(currentLocation.latitude, currentLocation.longitude), 16f)
         }
     )
 
@@ -36,7 +36,6 @@ fun HomeBody(
             else -> viewModel.locationRepository.requestLocationUpdates()
         }
     }
-
 
     LaunchedEffect(Unit) {
         cameraPositionState.animate(
@@ -70,7 +69,9 @@ fun HomeBody(
             }
         }
     ) {
-
+        Marker(
+            state = MarkerState(LatLng(currentLocation.latitude,currentLocation.longitude))
+        )
     }
 }
 

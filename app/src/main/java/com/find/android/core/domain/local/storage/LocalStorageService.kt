@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocalStorageService {
 
-    fun getUserById(uid: String): Flow<ResponseState<UserModel>>
+    fun getUserById(uid: String): UserModel
 
     fun getUserActivityType(): DetectedActivityEnum
 

@@ -8,9 +8,7 @@ import com.find.android.core.domain.model.UserModel
 import com.find.android.core.domain.remote.storage.RemoteStorageService
 import com.find.android.core.domain.repository.StorageRepository
 import com.find.android.core.util.annotation.GoogleApi
-import com.find.android.core.util.event.ResponseState
 import com.find.android.core.util.extension.checkIsAvailable
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class StorageRepositoryImpl @Inject constructor(
@@ -19,27 +17,13 @@ class StorageRepositoryImpl @Inject constructor(
     private val remoteStorageService: RemoteStorageService,
 ) : StorageRepository {
 
-    //Todo(burda bi sorun var ama bakıcaz apiyle ilgili)
-    override fun getUserByUid(uid: String): Flow<ResponseState<UserModel>> =
-        if (googleApi.checkIsAvailable()) {
-            remoteStorageService.getUserByUid(uid)
-        } else {
-            localStorageService.getUserById(uid)
-        }
+    override fun getUserByUid(uid: String): UserModel = if (googleApi.checkIsAvailable())
+        remoteStorageService.getUserByUid(uid) else localStorageService.getUserById(uid)
 
-    override fun insertUser(user: User) {
-        if (googleApi.checkIsAvailable()) {
-            remoteStorageService.insertUser(user.toUserModule())
-        } else {
-            localStorageService.insertUser(user)
-        }
-    }
+    override fun insertUser(user: User) = if (googleApi.checkIsAvailable())
+        remoteStorageService.insertUser(user.toUserModule()) else localStorageService.insertUser(user)
 
-    override fun getUserLocation() : LocationModel =
-        if (!googleApi.checkIsAvailable()) {
-            remoteStorageService.getUserLocation()
-        } else {
-            localStorageService.getUSerLocation()
-        }
+    override fun getUserLocation(): LocationModel = if (googleApi.checkIsAvailable())
+        remoteStorageService.getUserLocation() else localStorageService.getUSerLocation()
 
 }

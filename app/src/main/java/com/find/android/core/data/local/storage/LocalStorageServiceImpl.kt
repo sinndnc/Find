@@ -7,28 +7,19 @@ import com.find.android.core.domain.local.storage.LocalStorageService
 import com.find.android.core.domain.mapper.toUserModule
 import com.find.android.core.domain.model.UserModel
 import com.find.android.core.util.annotation.IoDispatcher
-import com.find.android.core.util.event.ResponseState
 import com.find.android.core.util.recognition.enums.DetectedActivityEnum
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class LocalStorageServiceImpl @Inject constructor(
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    private val firebaseAuth: FirebaseAuth,
     private val database: UserDao,
+    private val firebaseAuth: FirebaseAuth,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : LocalStorageService {
-
-    //Todo(düzeltcem ama acelesi yok)
-    override fun getUserById(uid: String): Flow<ResponseState<UserModel>> = flow {
-        emit(ResponseState.Loading)
-        emit(ResponseState.Success(database.getUserByUid(uid).toUserModule()))
-    }
 
     override fun insertUser(user: User) {
         CoroutineScope(ioDispatcher).launch {
@@ -36,16 +27,15 @@ class LocalStorageServiceImpl @Inject constructor(
         }
     }
 
+    override fun getUserById(uid: String): UserModel =
+        runBlocking(ioDispatcher){database.getUserByUid(uid).toUserModule() }
+
     override fun getUserActivityType(): DetectedActivityEnum =
         runBlocking(ioDispatcher) { database.getUserActivityType(firebaseAuth.uid!!) }
-
 
     override fun setUserActivityType(activityType: String) =
         runBlocking(ioDispatcher) { database.setUserActivityType(firebaseAuth.uid!!, activityType) }
 
     override fun getUSerLocation(): LocationModel =
         runBlocking(ioDispatcher) { database.getUserLocation(firebaseAuth.uid!!) }
-
-
-
 }
