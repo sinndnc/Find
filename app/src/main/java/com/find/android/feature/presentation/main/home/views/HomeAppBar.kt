@@ -31,7 +31,7 @@ fun BoxScope.HomeAppBar(
 ) {
 
     val scope = rememberCoroutineScope()
-    val bitmap = viewModel.userInfo.value.image?.convertToBitmap()
+    // val bitmap = viewModel.userInfo.value.image?.convertToBitmap()
 
     Row(
         modifier = Modifier
@@ -43,23 +43,24 @@ fun BoxScope.HomeAppBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        bitmap?.let {
-            Image(
-                it.asImageBitmap(),
-                contentDescription = "avatar",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(45.dp)
-                    .clip(CircleShape)
-                    .border(1.dp, Color.White, CircleShape)
-                    .background(Color.DarkGray)
-                    .clickable {
-                        scope.launch {
-                            viewModel.clickToProfile(appBarProfileState)
-                        }
+        //bitmap?.let {
+        Image(
+            //it.asImageBitmap(),
+            painterResource(R.drawable.ic_launcher_foreground),
+            contentDescription = "avatar",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(45.dp)
+                .clip(CircleShape)
+                .border(1.dp, Color.White, CircleShape)
+                .background(Color.DarkGray)
+                .clickable {
+                    scope.launch {
+                        viewModel.clickToProfile(appBarProfileState)
                     }
-            )
-        }
+                }
+        )
+        //  }
         Image(
             painter = painterResource(R.drawable.ic_launcher_foreground),
             contentDescription = "message",

@@ -23,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 @OptIn(ExperimentalMaterialApi::class)
 class HomeViewModel @Inject constructor(
-    userUseCase: UserUseCase,
+    val userUseCase: UserUseCase,
     val locationRepository: LocationRepository,
     private val locationSettingUseCase: LocationSettingUseCase,
     val activityRecognitionRepository: ActivityRecognitionRepository,

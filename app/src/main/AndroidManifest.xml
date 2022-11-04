@@ -39,7 +39,7 @@
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDn9cUOyFa7N8gim3UqwQLiELJUznOI9Js">
+            android:value="AIzaSyBp9PG_NEAplFvrzDbMWSvH4uUCvdG-A6Y">
         </meta-data>
         <receiver
             android:name=".core.util.recognition.broadcast.ActivityRecognitionReceiver"

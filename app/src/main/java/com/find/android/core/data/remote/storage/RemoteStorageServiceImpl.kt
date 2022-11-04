@@ -24,7 +24,7 @@ class RemoteStorageServiceImpl @Inject constructor(
     override fun getUserByUid(uid: String): UserModel =
         runBlocking(ioDispatcher) {
             val response = firestore.collection(FirestoreConstants.USER_COLLECTION).document(uid).get().await()
-            if (response.exists()) response.toObject(UserModel::class.java)!! else UserModel()
+            if (response.exists()) response.toObject(UserModel::class.java)!!.apply { image = getUserImage(uid) } else UserModel()
         }
 
     override fun getUserImage(uid: String): ByteArray =

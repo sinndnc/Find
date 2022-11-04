@@ -14,11 +14,14 @@ interface UserDao {
     @Query("SELECT * FROM user")
     fun getAllUser(): List<User>
 
+    @Insert
+    fun insertUser(vararg users: User)
+
     @Query("SELECT * FROM user WHERE uid LIKE :uid")
     fun getUserByUid(uid: String): User
 
-    @Insert
-    fun insertUser(vararg users: User)
+    @Query("UPDATE User SET image = :image WHERE uid = :uid")
+    fun updateUserImage(uid: String, image: ByteArray)
 
     @Query("SELECT `activity type` FROM user WHERE uid LIKE :uid")
     fun getUserActivityType(uid: String): DetectedActivityEnum

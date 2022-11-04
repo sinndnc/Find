@@ -17,8 +17,8 @@ import javax.inject.Inject
 
 @SuppressLint("MissingPermission")
 class LocationRepositoryImpl @Inject constructor(
+    storageRepository: StorageRepository,
     private val locationService: LocationService,
-    private val storageRepository: StorageRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : LocationRepository {
 
