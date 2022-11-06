@@ -15,7 +15,8 @@ interface LocalStorageService {
 
     fun setUserActivityType(activityType: String)
 
-    fun getUSerLocation(): LocationModel
+    fun getUserLocation(): LocationModel
 
     fun insertUser(user: User)
+    fun setUserLocation(locationModel: LocationModel)
 }

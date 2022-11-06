@@ -1,9 +1,12 @@
 package com.find.android.feature.presentation.main.home.views
 
+import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.SwipeableState
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+import com.find.android.R
 import com.find.android.core.util.recognition.enums.DetectedActivityEnum
 import com.find.android.feature.component.theme.Blue500
 import com.find.android.feature.presentation.main.home.HomeViewModel
@@ -12,8 +15,10 @@ import com.find.android.feature.util.extension.convertToBitmap
 import com.find.android.feature.util.extension.getCroppedBitmap
 import com.find.android.feature.util.extension.toLatLng
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 import kotlinx.coroutines.launch
 
@@ -23,6 +28,7 @@ fun HomeBody(
     viewModel: HomeViewModel, dynamicIslandState: MutableState<DynamicIslandState>, bottomState: SwipeableState<BottomSheetState>
 ) {
 
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val currentActivity by remember { viewModel.activityRecognitionRepository.currentActivity }
     val currentLocation by remember { viewModel.locationRepository.currentLocation }
@@ -30,19 +36,17 @@ fun HomeBody(
         position = CameraPosition.fromLatLngZoom(currentLocation.toLatLng(), 16f)
     }
 
-    fun DetectedActivityEnum.onChangeListener() {
-        when (this) {
+    DisposableEffect(currentActivity) {
+        Log.d("LocationTest", "Disposable $currentActivity")
+        when (currentActivity) {
             DetectedActivityEnum.STILL -> viewModel.locationRepository.getCurrentLocation()
             else -> viewModel.locationRepository.requestLocationUpdates()
         }
+        onDispose {  }
     }
 
-    val infiniteTransition = rememberInfiniteTransition()
-    val scale by infiniteTransition.animateFloat(
-        initialValue = 20.0.toFloat(), targetValue = 25.0.toFloat(), animationSpec = infiniteRepeatable(
-            animation = tween(1500), repeatMode = RepeatMode.Reverse
-        )
-    )
+
+
 
     GoogleMap(
         cameraPositionState = cameraPositionState,
@@ -52,20 +56,15 @@ fun HomeBody(
             myLocationButtonEnabled = false,
             mapToolbarEnabled = false,
         ),
+        properties = MapProperties(
+            mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.find_light_map),
+        ),
         onMapClick = {
             coroutineScope.launch {
                 onMapClick(dynamicIslandState, bottomState)
             }
         },
     ) {
-        Circle(
-            radius = scale.toDouble(),
-            center = currentLocation.toLatLng(),
-            fillColor = Blue500.copy(0.3f),
-            strokeColor = Blue500.copy(0.5f),
-            strokeWidth = 2f,
-        )
-
         Marker(
             icon = BitmapDescriptorFactory.fromBitmap(
                 viewModel.userUseCase.userModel.value.image!!.convertToBitmap().getCroppedBitmap()!!

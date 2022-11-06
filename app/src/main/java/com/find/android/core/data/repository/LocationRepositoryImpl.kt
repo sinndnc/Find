@@ -2,6 +2,7 @@ package com.find.android.core.data.repository
 
 import android.annotation.SuppressLint
 import android.location.Location
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.find.android.core.data.local.room.entity.LocationModel
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @SuppressLint("MissingPermission")
 class LocationRepositoryImpl @Inject constructor(
-    storageRepository: StorageRepository,
+    private val storageRepository: StorageRepository,
     private val locationService: LocationService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : LocationRepository {
@@ -30,7 +31,8 @@ class LocationRepositoryImpl @Inject constructor(
             responseState.onLoading {
 
             }.onSuccess { location ->
-                _currentLocation.value = LocationModel(location.latitude, location.longitude)
+                _currentLocation.value = location
+                storageRepository.setUserLocation(location)
             }.onError {
 
             }
@@ -40,9 +42,11 @@ class LocationRepositoryImpl @Inject constructor(
     override fun requestLocationUpdates() {
         locationService.requestLocationUpdates().onEach { responseState ->
             responseState.onLoading {
-
+                Log.d("LocationTest", "requestLocationUpdates onLoading")
             }.onSuccess { location ->
-                _currentLocation.value = LocationModel(location.latitude, location.longitude)
+                _currentLocation.value = location
+                storageRepository.setUserLocation(location)
+                Log.d("LocationTest", "requestLocationUpdates")
             }.onError {
 
             }
@@ -52,9 +56,11 @@ class LocationRepositoryImpl @Inject constructor(
     override fun getCurrentLocation() {
         locationService.getCurrentLocation().onEach { responseState ->
             responseState.onLoading {
-
+                Log.d("LocationTest", "getCurrentLocation onLoading")
             }.onSuccess { location ->
-                _currentLocation.value = LocationModel(location.latitude, location.longitude)
+                _currentLocation.value = location
+                storageRepository.setUserLocation(location)
+                Log.d("LocationTest", "getCurrentLocation ")
             }.onError {
 
             }

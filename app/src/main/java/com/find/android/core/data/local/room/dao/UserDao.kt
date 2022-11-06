@@ -32,6 +32,9 @@ interface UserDao {
     @Query("SELECT longitude,latitude FROM user WHERE uid LIKE :uid")
     fun getUserLocation(uid: String): LocationModel
 
+    @Query("UPDATE User SET latitude = :latitude, longitude = :longitude WHERE uid = :uid")
+    fun setUserLocation(uid: String, latitude: Double, longitude: Double)
+
     @Delete
     fun deleteUser(user: User)
 }

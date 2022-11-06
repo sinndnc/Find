@@ -36,6 +36,9 @@ class LocalStorageServiceImpl @Inject constructor(
     override fun setUserActivityType(activityType: String) =
         runBlocking(ioDispatcher) { database.setUserActivityType(firebaseAuth.uid!!, activityType) }
 
-    override fun getUSerLocation(): LocationModel =
+    override fun getUserLocation(): LocationModel =
         runBlocking(ioDispatcher) { database.getUserLocation(firebaseAuth.uid!!) }
+
+    override fun setUserLocation(locationModel: LocationModel) =
+        runBlocking(ioDispatcher) {database.setUserLocation(firebaseAuth.uid!!,locationModel.latitude,locationModel.longitude)}
 }

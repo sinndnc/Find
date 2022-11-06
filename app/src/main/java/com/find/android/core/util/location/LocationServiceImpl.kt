@@ -4,8 +4,12 @@ import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Looper
 import android.util.Log
+import com.find.android.core.data.local.room.entity.LocationModel
+import com.find.android.core.domain.repository.ActivityRecognitionRepository
 import com.find.android.core.util.annotation.IoDispatcher
 import com.find.android.core.util.event.ResponseState
+import com.find.android.core.util.recognition.enums.DetectedActivityEnum
+import com.find.android.feature.util.extension.toLocationModel
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -13,6 +17,7 @@ import com.google.android.gms.tasks.OnTokenCanceledListener
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -20,6 +25,7 @@ import javax.inject.Inject
 class LocationServiceImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val fusedLocationProviderClient: FusedLocationProviderClient,
+    private val activityRecognitionRepository: ActivityRecognitionRepository
 ) : LocationService {
 
     override val locationRequest: LocationRequest
@@ -31,40 +37,47 @@ class LocationServiceImpl @Inject constructor(
             fastestInterval = 2000
         }
 
-    override fun getLastKnownLocation(): Flow<ResponseState<Location>> = flow<ResponseState<Location>> {
+    override fun getLastKnownLocation(): Flow<ResponseState<LocationModel>> = flow {
         emit(ResponseState.Loading)
         val lastLocation = fusedLocationProviderClient.lastLocation.await()
-        if (lastLocation != null) emit(ResponseState.Success(lastLocation))
+        if (lastLocation != null) emit(ResponseState.Success(lastLocation.toLocationModel()))
     }.catch {
         Log.d("LocationTest", it.cause.toString())
         emit(ResponseState.Error(it.cause))
     }.flowOn(ioDispatcher)
 
 
-    override fun getCurrentLocation(): Flow<ResponseState<Location>> = flow {
+    override fun getCurrentLocation(): Flow<ResponseState<LocationModel>> = flow {
         emit(ResponseState.Loading)
-        val task = fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, CancellationCallback()).await()
-        if (task != null) emit(ResponseState.Success(task))
+        val location = fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, CancellationCallback()).await()
+        if (location != null) emit(ResponseState.Success(location.toLocationModel()))
     }.catch { exception ->
         emit(ResponseState.Error(exception))
     }.flowOn(ioDispatcher)
 
 
-    override fun requestLocationUpdates(): Flow<ResponseState<Location>> = callbackFlow {
+    override fun requestLocationUpdates(): Flow<ResponseState<LocationModel>> = callbackFlow {
         trySend(ResponseState.Loading)
         val callBack = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
-                locationResult.lastLocation?.let { trySend(ResponseState.Success(it)) }
+                if (activityRecognitionRepository.currentActivity.value == DetectedActivityEnum.STILL)
+                    fusedLocationProviderClient.removeLocationUpdates(this)
+                else
+                    locationResult.lastLocation?.let { trySend(ResponseState.Success(it.toLocationModel())) }
                 super.onLocationResult(locationResult)
             }
         }
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, callBack, Looper.getMainLooper())
         awaitClose { fusedLocationProviderClient.removeLocationUpdates(callBack) }
     }.catch {
-        Log.d("LocationTest", it.cause.toString())
+        Log.d("LocationTest", "catch " + it.cause.toString())
         emit(ResponseState.Error(it.cause))
     }.flowOn(ioDispatcher)
 
+    override fun removeRequestLocationUpdates(callback: LocationCallback) {
+        Log.d("LocationTest", "removeRequestLocationUpdates")
+        runBlocking(ioDispatcher) { fusedLocationProviderClient.removeLocationUpdates(callback).await() }
+    }
 
     private inner class CancellationCallback : CancellationToken() {
         override fun onCanceledRequested(p0: OnTokenCanceledListener): CancellationToken {

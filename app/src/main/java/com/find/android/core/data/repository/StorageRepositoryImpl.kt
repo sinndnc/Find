@@ -17,13 +17,17 @@ class StorageRepositoryImpl @Inject constructor(
     private val remoteStorageService: RemoteStorageService,
 ) : StorageRepository {
 
-    override fun getUserByUid(uid: String): UserModel = if (googleApi.checkIsAvailable())
-        remoteStorageService.getUserByUid(uid) else localStorageService.getUserById(uid)
-
     override fun insertUser(user: User) = if (googleApi.checkIsAvailable())
         remoteStorageService.insertUser(user.toUserModule()) else localStorageService.insertUser(user)
 
+    override fun getUserByUid(uid: String): UserModel = if (googleApi.checkIsAvailable())
+        remoteStorageService.getUserByUid(uid) else localStorageService.getUserById(uid)
+
     override fun getUserLocation(): LocationModel = if (googleApi.checkIsAvailable())
-        remoteStorageService.getUserLocation() else localStorageService.getUSerLocation()
+        remoteStorageService.getUserLocation() else localStorageService.getUserLocation()
+
+    override fun setUserLocation(locationModel: LocationModel) { if (!googleApi.checkIsAvailable())
+        remoteStorageService.getUserLocation() else localStorageService.setUserLocation(locationModel)
+    }
 
 }

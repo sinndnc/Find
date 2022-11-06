@@ -18,7 +18,7 @@ class ActivityRecognitionRepositoryImpl @Inject constructor(
     private val activityRecognitionService: ActivityRecognitionService
 ) : ActivityRecognitionRepository {
 
-    private val _currentActivity: MutableState<DetectedActivityEnum> = mutableStateOf(DetectedActivityEnum.UNKNOWN)
+    private val _currentActivity: MutableState<DetectedActivityEnum> = mutableStateOf(localStorageService.getUserActivityType())
     override val currentActivity: MutableState<DetectedActivityEnum> get() = _currentActivity
 
     override fun setCurrentActivityType(activity: ActivityTransitionEvent) {
