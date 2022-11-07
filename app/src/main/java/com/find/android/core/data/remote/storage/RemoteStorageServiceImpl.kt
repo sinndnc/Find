@@ -5,6 +5,7 @@ import com.find.android.core.data.local.room.entity.LocationModel
 import com.find.android.core.domain.model.UserModel
 import com.find.android.core.domain.remote.storage.RemoteStorageService
 import com.find.android.core.util.annotation.IoDispatcher
+import com.find.android.feature.util.extension.toGeoPoint
 import com.find.android.feature.util.extension.toLocationModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -26,6 +27,13 @@ class RemoteStorageServiceImpl @Inject constructor(
             val response = firestore.collection(FirestoreConstants.USER_COLLECTION).document(uid).get().await()
             if (response.exists()) response.toObject(UserModel::class.java)!!.apply { image = getUserImage(uid) } else UserModel()
         }
+
+    override fun setUserLocation(locationModel: LocationModel) {
+        runBlocking(ioDispatcher) {
+            val userRef = firestore.collection(FirestoreConstants.USER_COLLECTION).document(firebaseAuth.uid!!)
+            userRef.update("location", locationModel.toGeoPoint())
+        }
+    }
 
     override fun getUserImage(uid: String): ByteArray =
         runBlocking(ioDispatcher) {

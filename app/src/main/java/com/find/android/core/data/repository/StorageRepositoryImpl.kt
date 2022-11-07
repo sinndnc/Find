@@ -26,8 +26,8 @@ class StorageRepositoryImpl @Inject constructor(
     override fun getUserLocation(): LocationModel = if (googleApi.checkIsAvailable())
         remoteStorageService.getUserLocation() else localStorageService.getUserLocation()
 
-    override fun setUserLocation(locationModel: LocationModel) { if (!googleApi.checkIsAvailable())
-        remoteStorageService.getUserLocation() else localStorageService.setUserLocation(locationModel)
+    override fun setUserLocation(locationModel: LocationModel) { if (googleApi.checkIsAvailable())
+        remoteStorageService.setUserLocation(locationModel) else localStorageService.setUserLocation(locationModel)
     }
 
 }

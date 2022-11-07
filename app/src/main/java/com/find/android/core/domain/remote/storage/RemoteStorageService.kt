@@ -12,4 +12,6 @@ interface RemoteStorageService {
     fun getUserLocation():LocationModel
 
     fun getUserImage(uid: String): ByteArray
+
+    fun setUserLocation(locationModel: LocationModel)
 }

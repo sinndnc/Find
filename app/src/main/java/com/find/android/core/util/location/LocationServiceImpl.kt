@@ -33,8 +33,8 @@ class LocationServiceImpl @Inject constructor(
             priority = Priority.PRIORITY_HIGH_ACCURACY
             smallestDisplacement = 15F
             isWaitForAccurateLocation = true
-            interval = 3000
-            fastestInterval = 2000
+            interval = 1000
+            fastestInterval = 500
         }
 
     override fun getLastKnownLocation(): Flow<ResponseState<LocationModel>> = flow {
