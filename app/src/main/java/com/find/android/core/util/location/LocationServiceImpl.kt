@@ -1,7 +1,6 @@
 package com.find.android.core.util.location
 
 import android.annotation.SuppressLint
-import android.location.Location
 import android.os.Looper
 import android.util.Log
 import com.find.android.core.data.local.room.entity.LocationModel

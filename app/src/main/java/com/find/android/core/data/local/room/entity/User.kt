@@ -14,7 +14,7 @@ class ActivityTypeConverter {
 }
 
 data class LocationModel(
-    val latitude: Double,
+    var latitude: Double,
     val longitude: Double,
 )
 

@@ -8,26 +8,30 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import com.find.android.R
 import com.find.android.core.util.recognition.enums.DetectedActivityEnum
-import com.find.android.feature.component.theme.Blue500
 import com.find.android.feature.presentation.main.home.HomeViewModel
 import com.find.android.feature.presentation.main.home.component.barSheet.DynamicIslandState
 import com.find.android.feature.util.extension.convertToBitmap
 import com.find.android.feature.util.extension.getCroppedBitmap
 import com.find.android.feature.util.extension.toLatLng
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 import kotlinx.coroutines.launch
+import kotlin.math.atan2
+import kotlin.math.sin
+import kotlin.math.cos
+
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 fun HomeBody(
-    viewModel: HomeViewModel, dynamicIslandState: MutableState<DynamicIslandState>, bottomState: SwipeableState<BottomSheetState>
+    viewModel: HomeViewModel,
+    bottomState: SwipeableState<BottomSheetState>,
+    dynamicIslandState: MutableState<DynamicIslandState>,
 ) {
-
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val currentActivity by remember { viewModel.activityRecognitionRepository.currentActivity }
@@ -36,17 +40,32 @@ fun HomeBody(
         position = CameraPosition.fromLatLngZoom(currentLocation.toLatLng(), 16f)
     }
 
+    val longitude by animateFloatAsState(
+        targetValue = currentLocation.longitude.toFloat(),
+        animationSpec = tween(
+            durationMillis = 400,
+            delayMillis = 50,
+            easing = LinearEasing
+        )
+    )
+
+    val latitude by animateFloatAsState(
+        targetValue = currentLocation.latitude.toFloat(),
+        animationSpec = tween(
+            durationMillis = 400,
+            delayMillis = 50,
+            easing = LinearEasing
+        )
+    )
+
     DisposableEffect(currentActivity) {
         Log.d("LocationTest", "Disposable $currentActivity")
         when (currentActivity) {
             DetectedActivityEnum.STILL -> viewModel.locationRepository.getCurrentLocation()
             else -> viewModel.locationRepository.requestLocationUpdates()
         }
-        onDispose {  }
+        onDispose { }
     }
-
-
-
 
     GoogleMap(
         cameraPositionState = cameraPositionState,
@@ -69,7 +88,7 @@ fun HomeBody(
             icon = BitmapDescriptorFactory.fromBitmap(
                 viewModel.userUseCase.userModel.value.image!!.convertToBitmap().getCroppedBitmap()!!
             ),
-            state = MarkerState(currentLocation.toLatLng()),
+            state = MarkerState(LatLng(latitude.toDouble(), longitude.toDouble())),
             onClick = {
                 coroutineScope.launch {
                     cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(currentLocation.toLatLng(), 16f))
@@ -87,13 +106,7 @@ fun HomeBody(
 private suspend fun onMapClick(
     dynamicIslandState: MutableState<DynamicIslandState>, bottomState: SwipeableState<BottomSheetState>
 ) {
-    when {
-        dynamicIslandState.value != DynamicIslandState.Collapsed -> {
-            dynamicIslandState.value = DynamicIslandState.Collapsed
-        }
-        bottomState.currentValue != BottomSheetState.Collapsed -> {
-            bottomState.animateTo(BottomSheetState.Collapsed)
-        }
-    }
+    dynamicIslandState.value = DynamicIslandState.Collapsed
+    bottomState.animateTo(BottomSheetState.Collapsed)
 }
 

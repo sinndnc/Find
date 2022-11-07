@@ -5,7 +5,7 @@ import android.graphics.Bitmap.Config
 
 fun ByteArray.convertToBitmap(): Bitmap {
     val bitmap = BitmapFactory.decodeByteArray(this, 0, this.size)
-    return Bitmap.createScaledBitmap(bitmap, 90, 90, true)
+    return Bitmap.createScaledBitmap(bitmap, 80, 80, true)
 }
 
 fun Bitmap.getCroppedBitmap(): Bitmap? {

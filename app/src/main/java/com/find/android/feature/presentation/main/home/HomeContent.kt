@@ -32,16 +32,14 @@ fun HomeContent(viewModel: HomeViewModel, navController: NavController) {
     }
 
     Box {
-        HomeBody(viewModel, dynamicIslandState, bottomState)
-        HomeBarDynamicIsland(dynamicIslandState)
+        HomeBody(viewModel, bottomState, dynamicIslandState)
+        HomeBarDynamicIsland(viewModel, dynamicIslandState)
         HomeAppBar(viewModel, appBarSettingState, appBarProfileState)
         HomeBottomBar(navController, appBarProfileState, appBarSettingState, bottomState)
     }
 
-    LifeCycleEvent(
-        onStart = { viewModel.checkLocationIsEnabled(resultLauncher, activity) },
-        onStop = { viewModel.stopLocationService(activity) }
-    )
+    LifeCycleEvent(onStart = { viewModel.checkLocationIsEnabled(resultLauncher, activity) },
+        onStop = { viewModel.stopLocationService(activity) })
 
     BackHandler {
         when {

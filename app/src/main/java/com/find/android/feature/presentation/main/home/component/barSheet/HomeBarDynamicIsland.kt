@@ -6,19 +6,32 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ThumbUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.find.android.R
+import com.find.android.feature.presentation.main.home.HomeViewModel
+import com.find.android.feature.util.extension.detectModeIcon
 
 enum class DynamicIslandState { Collapsed, Expanded }
 
 @Composable
-fun BoxScope.HomeBarDynamicIsland(state: MutableState<DynamicIslandState>) {
+fun BoxScope.HomeBarDynamicIsland(
+    viewModel: HomeViewModel,
+    state: MutableState<DynamicIslandState>
+) {
 
     val transition = updateTransition(state, label = "DynamicIsland")
+    val currentActivity by remember { viewModel.activityRecognitionRepository.currentActivity }
     val height = transition.animateFloat(label = "DynamicIslandAnimateHeight") { dynamicIslandState ->
         when (dynamicIslandState.value) {
             DynamicIslandState.Collapsed -> 0.05F
@@ -45,7 +58,11 @@ fun BoxScope.HomeBarDynamicIsland(state: MutableState<DynamicIslandState>) {
                 state.value = if (state.value == DynamicIslandState.Expanded)
                     DynamicIslandState.Collapsed else DynamicIslandState.Expanded
             },
+        contentAlignment = Alignment.Center,
     ) {
-
+        Row {
+            Text("mode: ", style = MaterialTheme.typography.body2)
+            Icon(painterResource(currentActivity.detectModeIcon()), contentDescription = "")
+        }
     }
 }
