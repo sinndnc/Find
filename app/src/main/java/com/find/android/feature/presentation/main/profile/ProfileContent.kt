@@ -10,7 +10,6 @@ import com.find.android.feature.presentation.main.home.views.AppBarSheetState
 import com.find.android.feature.presentation.main.profile.component.ProfileImageSetting
 import com.find.android.feature.presentation.main.profile.component.ProfileListsRow
 import com.find.android.feature.presentation.main.profile.views.ProfileAppBar
-import com.find.android.feature.util.extension.setThemeBackground
 
 enum class PersistenceImageSheetState { Collapsed, Expanded }
 
@@ -27,7 +26,7 @@ fun ProfileContent(viewModel: ProfileViewModel, navController: NavController, st
     ) {
         ProfileAppBar(viewModel, state)
         Spacer(Modifier.height(30.dp))
-        //ProfileImageSetting(viewModel, imageState)
+        ProfileImageSetting(viewModel, imageState)
         ProfileListsRow(viewModel)
     }
 
