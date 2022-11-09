@@ -1,4 +1,4 @@
-package com.find.android.feature.presentation.main.profile.model
+package com.find.android.feature.presentation.main.profile.model.profile
 
 sealed class ProfileColumnItems(
     val items: List<ProfileRowItems>,
@@ -10,6 +10,6 @@ sealed class ProfileColumnItems(
 
     companion object {
         val preferences = listOf(ProfileRowItems.Language, ProfileRowItems.DarkMode, ProfileRowItems.Notifications)
-        val privacy = listOf(ProfileRowItems.Privacy)
+        val privacy = listOf(ProfileRowItems.Privacy, ProfileRowItems.TermsAndPolicy, ProfileRowItems.Account)
     }
 }
