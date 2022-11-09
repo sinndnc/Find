@@ -43,8 +43,7 @@ fun HomeBody(
     val longitude by animateFloatAsState(
         targetValue = currentLocation.longitude.toFloat(),
         animationSpec = tween(
-            durationMillis = 400,
-            delayMillis = 50,
+            durationMillis = 800,
             easing = LinearEasing
         )
     )
@@ -52,8 +51,7 @@ fun HomeBody(
     val latitude by animateFloatAsState(
         targetValue = currentLocation.latitude.toFloat(),
         animationSpec = tween(
-            durationMillis = 400,
-            delayMillis = 50,
+            durationMillis = 800,
             easing = LinearEasing
         )
     )

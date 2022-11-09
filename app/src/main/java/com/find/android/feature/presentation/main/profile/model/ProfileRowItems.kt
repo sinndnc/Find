@@ -1,19 +1,15 @@
 package com.find.android.feature.presentation.main.profile.model
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.*
-import androidx.compose.ui.graphics.vector.ImageVector
+import com.find.android.R
 
 sealed class ProfileRowItems(
     val name: String,
-    val icon: ImageVector,
+    val icon: Int,
 ) {
-    object Notifications : ProfileRowItems("Notifications", Icons.Rounded.Notifications)
-    object DarkMode : ProfileRowItems("Dark mode", Icons.Rounded.LocationOn)
-    object Favorites : ProfileRowItems("Favorites", Icons.Rounded.FavoriteBorder)
-    object Downloads : ProfileRowItems("Downloads", Icons.Rounded.ExitToApp)
-    object Billing : ProfileRowItems("Billing", Icons.Rounded.AccountBox)
-    object Setting : ProfileRowItems("Setting", Icons.Rounded.Settings)
+    object Language : ProfileRowItems("Language", R.drawable.language)
+    object DarkMode : ProfileRowItems("Dark mode", R.drawable.dark_mode)
+    object Notifications : ProfileRowItems("Notifications",R.drawable.notifications)
 
+    object Privacy : ProfileRowItems("Privacy",R.drawable.policy)
 
 }

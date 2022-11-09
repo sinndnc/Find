@@ -26,6 +26,10 @@ class LocationRepositoryImpl @Inject constructor(
     private val _currentLocation: MutableState<LocationModel> = mutableStateOf(storageRepository.getUserLocation())
     override val currentLocation: MutableState<LocationModel> get() = _currentLocation
 
+    init {
+        getLastKnownLocation()
+    }
+
     override fun getLastKnownLocation() {
         locationService.getLastKnownLocation().onEach { responseState ->
             responseState.onLoading {

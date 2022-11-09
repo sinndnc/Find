@@ -5,13 +5,11 @@ sealed class ProfileColumnItems(
     val name: String,
 ) {
 
-    object Lists : ProfileColumnItems(lists, "Lists")
     object Preferences : ProfileColumnItems(preferences, "Preferences")
-    object Account : ProfileColumnItems(account, "Account")
+    object Privacy : ProfileColumnItems(privacy, "Privacy and Security")
 
     companion object {
-        val lists = listOf(ProfileRowItems.Favorites, ProfileRowItems.Downloads)
-        val preferences = listOf(ProfileRowItems.DarkMode, ProfileRowItems.Notifications)
-        val account = listOf(ProfileRowItems.Setting, ProfileRowItems.Billing)
+        val preferences = listOf(ProfileRowItems.Language, ProfileRowItems.DarkMode, ProfileRowItems.Notifications)
+        val privacy = listOf(ProfileRowItems.Privacy)
     }
 }

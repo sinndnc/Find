@@ -38,7 +38,8 @@ fun HomeContent(viewModel: HomeViewModel, navController: NavController) {
         HomeBottomBar(navController, appBarProfileState, appBarSettingState, bottomState)
     }
 
-    LifeCycleEvent(onStart = { viewModel.checkLocationIsEnabled(resultLauncher, activity) },
+    LifeCycleEvent(
+        onStart = { viewModel.checkLocationIsEnabled(resultLauncher, activity) },
         onStop = { viewModel.stopLocationService(activity) })
 
     BackHandler {
