@@ -1,7 +1,7 @@
 package com.find.android.core.di.helper
 
-import com.find.android.core.util.permission.PermissionHelper
-import com.find.android.core.util.permission.PermissionHelperImpl
+import com.find.android.core.util.permission.PermissionService
+import com.find.android.core.util.permission.PermissionServiceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,5 +14,5 @@ abstract class PermissionHelperModule {
 
     @Binds
     @Singleton
-    abstract fun bindPermissionHelper(permissionHelperImpl: PermissionHelperImpl): PermissionHelper
+    abstract fun bindPermissionHelper(permissionHelperImpl: PermissionServiceImpl): PermissionService
 }

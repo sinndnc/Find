@@ -3,6 +3,7 @@ package com.find.android.core.di.module
 import android.app.Application
 import android.content.Context
 import android.location.LocationManager
+import android.net.ConnectivityManager
 import com.find.android.core.util.annotation.GoogleApi
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.*
@@ -44,6 +45,11 @@ object GoogleModule {
         googleApiAvailability: GoogleApiAvailability,
         @ApplicationContext context: Context
     ): Int = googleApiAvailability.isGooglePlayServicesAvailable(context)
+
+    @Provides
+    @Singleton
+    fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager =
+        context.getSystemService(ConnectivityManager::class.java)
 
 
     @Provides

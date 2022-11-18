@@ -4,37 +4,43 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.find.android.core.data.local.room.entity.LocationModel
-import com.find.android.core.data.local.room.entity.User
+import com.find.android.core.data.local.room.entity.LocalUserModel
+import com.find.android.core.domain.model.LocationModel
 import com.find.android.core.util.recognition.enums.DetectedActivityEnum
 
 @Dao
 interface UserDao {
 
-    @Query("SELECT * FROM user")
-    fun getAllUser(): List<User>
+    @Query("SELECT * FROM LocalUserModel")
+    fun getAllUser(): List<LocalUserModel>
 
     @Insert
-    fun insertUser(vararg users: User)
+    fun insertUser(vararg localUserModels: LocalUserModel)
 
-    @Query("SELECT * FROM user WHERE uid LIKE :uid")
-    fun getUserByUid(uid: String): User
+    @Query("SELECT * FROM LocalUserModel WHERE uid LIKE :uid")
+    fun getUserByUid(uid: String): LocalUserModel
 
-    @Query("UPDATE User SET image = :image WHERE uid = :uid")
+    @Query("SELECT friends FROM LocalUserModel WHERE uid LIKE :uid ")
+    fun getUserFriendsList(uid: String) : List<String>
+
+    @Query("UPDATE LocalUserModel SET image = :image WHERE uid = :uid")
     fun updateUserImage(uid: String, image: ByteArray)
 
-    @Query("SELECT `activity type` FROM user WHERE uid LIKE :uid")
+    @Query("SELECT activityType FROM LocalUserModel WHERE uid LIKE :uid")
     fun getUserActivityType(uid: String): DetectedActivityEnum
 
-    @Query("UPDATE User SET `activity type`= :activityType WHERE uid= :uid")
+    @Query("UPDATE LocalUserModel SET activityType= :activityType WHERE uid= :uid")
     fun setUserActivityType(uid: String, activityType: String)
 
-    @Query("SELECT longitude,latitude FROM user WHERE uid LIKE :uid")
+    @Query("SELECT longitude,latitude FROM LocalUserModel WHERE uid LIKE :uid")
     fun getUserLocation(uid: String): LocationModel
 
-    @Query("UPDATE User SET latitude = :latitude, longitude = :longitude WHERE uid = :uid")
+    @Query("UPDATE LocalUserModel SET latitude = :latitude, longitude = :longitude WHERE uid = :uid")
     fun setUserLocation(uid: String, latitude: Double, longitude: Double)
 
+    @Query("UPDATE LocalUserModel SET token = :token WHERE uid = :uid")
+    fun setUserToken(uid: String, token: String)
+
     @Delete
-    fun deleteUser(user: User)
+    fun deleteUser(localUserModel: LocalUserModel)
 }

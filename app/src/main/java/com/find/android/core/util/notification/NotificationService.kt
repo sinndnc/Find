@@ -2,7 +2,7 @@ package com.find.android.core.util.notification
 
 import android.app.NotificationManager
 
-interface NotificationHelper {
+interface NotificationService {
 
     val notificationManager: NotificationManager
 

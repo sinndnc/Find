@@ -72,29 +72,37 @@ dependencies {
     implementation(Dependencies.Androidx.core)
     //Compose
     implementation(Dependencies.Compose.ui)
+    implementation(Dependencies.Compose.activity)
     implementation(Dependencies.Compose.material)
     implementation(Dependencies.Lifecycle.runtime)
-    implementation(Dependencies.Compose.activity)
     //Room
-    implementation(Dependencies.Room.runtime)
     kapt(Dependencies.Room.compiler)
+    implementation(Dependencies.Room.runtime)
     //Navigation
-    implementation(Dependencies.Navigation.compose)
     implementation(Dependencies.Navigation.hilt)
+    implementation(Dependencies.Navigation.compose)
     //Firebase
     implementation(platform(Dependencies.Firebase.boom))
     implementation(Dependencies.Firebase.auth)
     implementation(Dependencies.Firebase.storage)
+    implementation(Dependencies.Firebase.bootAware)
+    implementation(Dependencies.Firebase.messaging)
+    implementation(Dependencies.Firebase.analytics)
     implementation(Dependencies.Firebase.firestore)
-    //Preferences
-    implementation(Dependencies.Preferences.datastore)
+    //WorkManager
+    implementation(Dependencies.WorkManager.runtime)
     //Coroutines
     implementation(Dependencies.Coroutines.services)
+    //Preferences
+    implementation(Dependencies.Preferences.datastore)
     //Serialization
-    implementation (Dependencies.Serialization.runtime)
+    implementation(Dependencies.Serialization.runtime)
+    implementation(Dependencies.Serialization.gson)
     //Hilt
-    implementation(Dependencies.Hilt.hilt)
     kapt(Dependencies.Hilt.hiltKapt)
+    kapt(Dependencies.Hilt.hiltCompiler)
+    implementation(Dependencies.Hilt.hilt)
+    implementation(Dependencies.Hilt.workManager)
     //Map
     implementation(Dependencies.Compose.maps)
     implementation(Dependencies.GoogleService.maps)

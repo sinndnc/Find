@@ -2,7 +2,7 @@ package com.find.android.core.util.permission
 
 import androidx.activity.compose.ManagedActivityResultLauncher
 
-interface PermissionHelper {
+interface PermissionService {
 
     fun checkAndRequestMultiplePermissions(
         permissions: Array<String>,

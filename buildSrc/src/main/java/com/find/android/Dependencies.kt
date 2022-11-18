@@ -35,11 +35,18 @@ object Dependencies {
 
     object Firebase {
         private const val version = "30.4.1"
+        const val auth = "com.google.firebase:firebase-auth-ktx"
         const val boom = "com.google.firebase:firebase-bom:$version"
+        const val storage = "com.google.firebase:firebase-storage-ktx"
         const val analytics = "com.google.firebase:firebase-analytics-ktx"
         const val firestore = "com.google.firebase:firebase-firestore-ktx"
-        const val auth = "com.google.firebase:firebase-auth-ktx"
-        const val storage = "com.google.firebase:firebase-storage-ktx"
+        const val bootAware = "com.google.firebase:firebase-messaging-directboot:20.2.0"
+        const val messaging = "com.google.firebase:firebase-messaging-ktx"
+    }
+
+    object WorkManager{
+        private const val version = "2.7.1"
+        const val runtime = "androidx.work:work-runtime-ktx:$version"
     }
 
     object GoogleService {
@@ -49,6 +56,8 @@ object Dependencies {
     }
 
     object Hilt {
+        const val workManager = "androidx.hilt:hilt-work:1.0.0"
+        const val hiltCompiler = "androidx.hilt:hilt-compiler:1.0.0"
         const val hilt = "com.google.dagger:hilt-android:$hilt_version"
         const val hiltKapt = "com.google.dagger:hilt-android-compiler:$hilt_version"
     }
@@ -66,6 +75,7 @@ object Dependencies {
     object Serialization {
         private const val version = "1.4.0"
         const val runtime = "org.jetbrains.kotlinx:kotlinx-serialization-json:$version"
+        const val gson = "com.google.code.gson:gson:2.9.0"
     }
 
     object Compose {

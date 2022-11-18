@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.core.view.WindowCompat
-import com.find.android.core.util.notification.NotificationHelper
+import com.find.android.core.util.notification.NotificationService
 import com.find.android.core.util.theme.ThemeSetting
 import com.find.android.feature.component.theme.FindTheme
 import com.find.android.feature.navigation.FindNavigationGraph
@@ -19,7 +19,7 @@ class FindActivity : ComponentActivity() {
     lateinit var themeSetting: ThemeSetting
 
     @Inject
-    lateinit var notificationHelper: NotificationHelper
+    lateinit var notificationService: NotificationService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,7 @@ class FindActivity : ComponentActivity() {
     }
 
     private fun initializeSettings() {
-        notificationHelper.createChatNotificationChannel()
+        notificationService.createChatNotificationChannel()
         WindowCompat.setDecorFitsSystemWindows(window, false)
     }
 

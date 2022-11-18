@@ -5,9 +5,9 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class PermissionHelperImpl @Inject constructor(
+class PermissionServiceImpl @Inject constructor(
     @ApplicationContext private val context: Context
-) : PermissionHelper {
+) : PermissionService {
 
 
     override fun checkAndRequestMultiplePermissions(

@@ -6,12 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.find.android.core.domain.usecase.user.UserUseCase
-import com.find.android.core.util.annotation.MainDispatcher
 import com.find.android.core.util.theme.ThemeSetting
 import com.find.android.core.util.theme.ThemeState
 import com.find.android.feature.presentation.main.home.views.AppBarSheetState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +19,7 @@ class ProfileViewModel @Inject constructor(
     val themeSetting: ThemeSetting,
 ) : ViewModel() {
 
-    val userInfo = userUseCase.userModel
+    val userInfo = userUseCase.remoteUserModel
     val openDialog = mutableStateOf(false)
 
     @OptIn(ExperimentalMaterialApi::class)
