@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "0d180ec0b0f7bfe798d4011dac6552dc",
+    "identityHash": "fd53deea5da41b71a420a7066f90f357",
     "entities": [
       {
-        "tableName": "User",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` TEXT NOT NULL, `name` TEXT NOT NULL, `email` TEXT NOT NULL, `surname` TEXT NOT NULL, `activity type` TEXT NOT NULL, `image` BLOB, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, PRIMARY KEY(`uid`))",
+        "tableName": "LocalUserModel",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` TEXT NOT NULL, `name` TEXT NOT NULL, `surname` TEXT NOT NULL, `email` TEXT NOT NULL, `token` TEXT NOT NULL, `friends` TEXT NOT NULL, `activityType` TEXT NOT NULL, `image` BLOB, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, PRIMARY KEY(`uid`))",
         "fields": [
           {
             "fieldPath": "uid",
@@ -21,20 +21,32 @@
             "notNull": true
           },
           {
-            "fieldPath": "email",
-            "columnName": "email",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
             "fieldPath": "surname",
             "columnName": "surname",
             "affinity": "TEXT",
             "notNull": true
           },
           {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "token",
+            "columnName": "token",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "friends",
+            "columnName": "friends",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "activityType",
-            "columnName": "activity type",
+            "columnName": "activityType",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -70,7 +82,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0d180ec0b0f7bfe798d4011dac6552dc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fd53deea5da41b71a420a7066f90f357')"
     ]
   }
 }

@@ -1,33 +1,30 @@
 package com.find.android.core.data.repository
 
-import com.find.android.core.data.local.room.entity.LocationModel
-import com.find.android.core.data.local.room.entity.User
+import android.net.ConnectivityManager
+import com.find.android.core.data.local.room.entity.LocalUserModel
 import com.find.android.core.domain.local.storage.LocalStorageService
-import com.find.android.core.domain.mapper.toUserModule
-import com.find.android.core.domain.model.UserModel
+import com.find.android.core.domain.mapper.toRemoteUserModel
+import com.find.android.core.domain.model.LocationModel
+import com.find.android.core.domain.model.RemoteUserModel
 import com.find.android.core.domain.remote.storage.RemoteStorageService
 import com.find.android.core.domain.repository.StorageRepository
-import com.find.android.core.util.annotation.GoogleApi
-import com.find.android.core.util.extension.checkIsAvailable
+import com.find.android.core.util.event.ResponseState
+import com.find.android.feature.util.extension.hasInternet
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class StorageRepositoryImpl @Inject constructor(
-    @GoogleApi private val googleApi: Int,
+    private val connectivityManager: ConnectivityManager,
     private val localStorageService: LocalStorageService,
     private val remoteStorageService: RemoteStorageService,
 ) : StorageRepository {
 
-    override fun insertUser(user: User) = if (googleApi.checkIsAvailable())
-        remoteStorageService.insertUser(user.toUserModule()) else localStorageService.insertUser(user)
+    override fun insertUser(localUserModel: LocalUserModel) = if (connectivityManager.hasInternet())
+        remoteStorageService.insertUser(localUserModel.toRemoteUserModel()) else localStorageService.insertUser(localUserModel)
 
-    override fun getUserByUid(uid: String): UserModel = if (googleApi.checkIsAvailable())
+    override fun getUserByUid(uid: String): Flow<ResponseState<RemoteUserModel>> = if (connectivityManager.hasInternet())
         remoteStorageService.getUserByUid(uid) else localStorageService.getUserById(uid)
 
-    override fun getUserLocation(): LocationModel = if (googleApi.checkIsAvailable())
-        remoteStorageService.getUserLocation() else localStorageService.getUserLocation()
-
-    override fun setUserLocation(locationModel: LocationModel) { if (googleApi.checkIsAvailable())
+    override fun setUserLocation(locationModel: LocationModel) = if (connectivityManager.hasInternet())
         remoteStorageService.setUserLocation(locationModel) else localStorageService.setUserLocation(locationModel)
-    }
-
 }

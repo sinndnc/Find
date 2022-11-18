@@ -7,6 +7,6 @@ class SplashUseCaseImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
 ) : SplashUseCase {
 
-    override fun invoke(): Boolean = firebaseAuth.currentUser != null
+    override fun execute(): Boolean = firebaseAuth.currentUser != null
 
 }

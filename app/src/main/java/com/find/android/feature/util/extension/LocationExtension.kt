@@ -2,7 +2,7 @@ package com.find.android.feature.util.extension
 
 import android.location.Location
 import com.find.android.R
-import com.find.android.core.data.local.room.entity.LocationModel
+import com.find.android.core.domain.model.LocationModel
 import com.find.android.core.util.recognition.enums.DetectedActivityEnum
 import com.google.android.gms.maps.model.LatLng
 
@@ -18,3 +18,13 @@ fun DetectedActivityEnum.detectModeIcon(): Int = when (this) {
     DetectedActivityEnum.IN_VEHICLE -> R.drawable.directions_car
     else -> R.drawable.ic_launcher_foreground
 }
+
+fun String.detectModeIcon(): Int = when (this) {
+    DetectedActivityEnum.STILL.name -> R.drawable.direction_still
+    DetectedActivityEnum.WALKING.name -> R.drawable.directions_walk
+    DetectedActivityEnum.RUNNING.name -> R.drawable.directions_run
+    DetectedActivityEnum.ON_BICYCLE.name -> R.drawable.directions_bike
+    DetectedActivityEnum.IN_VEHICLE.name -> R.drawable.directions_car
+    else -> R.drawable.ic_launcher_foreground
+}
+

@@ -1,13 +1,31 @@
 package com.find.android.core.domain.mapper
 
-import com.find.android.core.data.local.room.entity.User
-import com.find.android.core.domain.model.UserModel
+import com.find.android.core.data.local.room.entity.LocalUserModel
+import com.find.android.core.domain.model.RemoteUserModel
+import com.find.android.feature.util.extension.toGeoPoint
+import com.find.android.feature.util.extension.toLocationModel
 
-fun User.toUserModule() = UserModel(
-    uid = this.uid,
-    name = this.name,
-    email = this.email,
-    surname = this.surname,
-    image = this.image
+fun LocalUserModel.toRemoteUserModel() = RemoteUserModel(
+    uid = uid,
+    name = name,
+    email = email,
+    image = image,
+    token = token,
+    surname = surname,
+    friends = friends,
+    activityType = activityType,
+    location = location.toGeoPoint(),
 )
 
+
+fun RemoteUserModel.toLocalUserModel() = LocalUserModel(
+    uid = uid,
+    name = name,
+    email = email,
+    image = image,
+    token = token,
+    surname = surname,
+    friends = friends,
+    activityType = activityType,
+    location = location.toLocationModel(),
+)

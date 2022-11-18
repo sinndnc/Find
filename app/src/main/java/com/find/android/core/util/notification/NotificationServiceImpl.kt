@@ -10,9 +10,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 
 import javax.inject.Inject
 
-class NotificationHelperImpl @Inject constructor(
+class NotificationServiceImpl @Inject constructor(
     @ApplicationContext context: Context,
-) : NotificationHelper {
+) : NotificationService {
 
     override val notificationManager: NotificationManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
