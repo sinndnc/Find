@@ -20,9 +20,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 import kotlinx.coroutines.launch
-import kotlin.math.atan2
-import kotlin.math.sin
-import kotlin.math.cos
 
 
 @Composable
@@ -34,33 +31,17 @@ fun HomeBody(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val currentActivity by remember { viewModel.activityRecognitionRepository.currentActivity }
-    val currentLocation by remember { viewModel.locationRepository.currentLocation }
+    val userModel by remember { viewModel.userModel }
+    val friendList = viewModel.friendList
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(currentLocation.toLatLng(), 16f)
+        position = CameraPosition.fromLatLngZoom(userModel.location.toLatLng(), 16f)
     }
 
-    val longitude by animateFloatAsState(
-        targetValue = currentLocation.longitude.toFloat(),
-        animationSpec = tween(
-            durationMillis = 800,
-            easing = LinearEasing
-        )
-    )
-
-    val latitude by animateFloatAsState(
-        targetValue = currentLocation.latitude.toFloat(),
-        animationSpec = tween(
-            durationMillis = 800,
-            easing = LinearEasing
-        )
-    )
-
-    DisposableEffect(currentActivity) {
-        Log.d("LocationTest", "Disposable $currentActivity")
-        when (currentActivity) {
-            DetectedActivityEnum.STILL -> viewModel.locationRepository.getCurrentLocation()
-            else -> viewModel.locationRepository.requestLocationUpdates()
+    DisposableEffect(userModel.activityType) {
+        Log.d("UserTest", userModel.activityType.name)
+        when (userModel.activityType) {
+            DetectedActivityEnum.STILL -> viewModel.getCurrentLocation()
+            else -> viewModel.requestLocationUpdates()
         }
         onDispose { }
     }
@@ -82,22 +63,33 @@ fun HomeBody(
             }
         },
     ) {
-        Marker(
-            icon = BitmapDescriptorFactory.fromBitmap(
-                viewModel.userUseCase.userModel.value.image!!.convertToBitmap().getCroppedBitmap()!!
-            ),
-            state = MarkerState(LatLng(latitude.toDouble(), longitude.toDouble())),
-            onClick = {
-                coroutineScope.launch {
-                    cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(currentLocation.toLatLng(), 16f))
-                }
-                true
-            },
-        )
+        userModel.image?.let {
+            Marker(
+                icon = BitmapDescriptorFactory.fromBitmap(
+                    it.convertToBitmap().getCroppedBitmap()!!
+                ),
+                state = MarkerState(userModel.location.toLatLng()),
+                onClick = {
+                    coroutineScope.launch {
+                        cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(userModel.location.toLatLng(), 16f))
+                    }
+                    true
+                },
+            )
+        }
+        for (friend in friendList) {
+            Marker(
+                state = MarkerState(friend.location.toLatLng()),
+                onClick = {
+                    coroutineScope.launch {
+                        cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(friend.location.toLatLng(), 16f))
+                    }
+                    true
+                },
+            )
+        }
 
     }
-
-
 }
 
 @OptIn(ExperimentalMaterialApi::class)

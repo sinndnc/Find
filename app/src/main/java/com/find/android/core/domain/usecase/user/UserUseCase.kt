@@ -1,13 +1,14 @@
 package com.find.android.core.domain.usecase.user
 
 import androidx.compose.runtime.MutableState
-import com.find.android.core.domain.model.UserModel
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.find.android.core.domain.model.RemoteUserModel
 
 interface UserUseCase {
 
-    val userUid: String
+    val userModel: MutableState<RemoteUserModel>
 
-    val userModel: MutableState<UserModel>
+    val friendList: SnapshotStateList<RemoteUserModel>
 
     fun getUserInformation()
 
