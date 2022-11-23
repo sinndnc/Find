@@ -20,7 +20,7 @@ fun ProfileItemRow(
     name: String,
     leadIcon: Int,
     icon: @Composable () -> Unit,
-    enabled: Boolean = false,
+    enabled: Boolean = true,
     onClick: () -> Unit = {}
 ) {
 

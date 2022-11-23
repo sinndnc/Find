@@ -27,8 +27,6 @@ fun ProfileContent(viewModel: ProfileViewModel, navController: NavController, st
         ProfileAppBar(viewModel, state)
         Spacer(Modifier.height(30.dp))
         ProfileImageSetting(viewModel, imageState)
-        ProfileListsRow(viewModel)
+        ProfileListsRow(viewModel,navController)
     }
-
-
 }

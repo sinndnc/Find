@@ -2,7 +2,9 @@ package com.find.android.core.domain.usecase.user
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.find.android.core.data.local.room.dao.UserDao
 import com.find.android.core.domain.mapper.toRemoteUserModel
 import com.find.android.core.domain.model.RemoteUserModel
@@ -25,22 +27,25 @@ class UserUseCaseImpl @Inject constructor(
     @IoCoroutineScope private val coroutineScope: CoroutineScope,
 ) : UserUseCase {
 
-    private val _userModel = mutableStateOf(runBlocking(ioDispatcher) {database.getUserByUid(firebaseAuth.uid!!).toRemoteUserModel() })
-    override val remoteUserModel: MutableState<RemoteUserModel> get() = _userModel
+    private val currentUser = runBlocking(ioDispatcher) { database.getUserByUid(firebaseAuth.uid!!).toRemoteUserModel() }
+    private val _userModel = mutableStateOf(currentUser)
+    override val userModel: MutableState<RemoteUserModel> = _userModel
 
+    private var _friendList: SnapshotStateList<RemoteUserModel> = mutableStateListOf()
+    override var friendList: SnapshotStateList<RemoteUserModel> = _friendList
 
     override fun getUserInformation() {
-        storageRepository.getUserByUid(firebaseAuth.uid!!).onEach { responseState ->
-            responseState
-                .onLoading {
+        storageRepository.getCurrentUser().onEach { responseState ->
+            responseState.onLoading {
 
                 }.onSuccess { user ->
                     _userModel.value = user
-                    Log.d("UserTest", "getUserInformation " + _userModel.value.toString())
+                    _friendList.addAll(storageRepository.getUserFriendList(user.friends))
                 }.onError {
                     Log.d("UserTest", "getUserInformation $it")
-
                 }
         }.launchIn(coroutineScope)
     }
+
+
 }

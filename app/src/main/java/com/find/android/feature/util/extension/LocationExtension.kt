@@ -28,3 +28,12 @@ fun String.detectModeIcon(): Int = when (this) {
     else -> R.drawable.ic_launcher_foreground
 }
 
+
+fun String.toActivityType(): DetectedActivityEnum = when (this) {
+    DetectedActivityEnum.STILL.name ->  DetectedActivityEnum.STILL
+    DetectedActivityEnum.WALKING.name ->  DetectedActivityEnum.WALKING
+    DetectedActivityEnum.RUNNING.name ->  DetectedActivityEnum.RUNNING
+    DetectedActivityEnum.ON_BICYCLE.name ->  DetectedActivityEnum.ON_BICYCLE
+    DetectedActivityEnum.IN_VEHICLE.name ->  DetectedActivityEnum.IN_VEHICLE
+    else ->  DetectedActivityEnum.UNKNOWN
+}

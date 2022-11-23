@@ -32,19 +32,22 @@ class LocalStorageServiceImpl @Inject constructor(
         }
     }
 
-    override fun getUserById(uid: String): Flow<ResponseState<RemoteUserModel>> = flow {
+    override fun getCurrentUser(): Flow<ResponseState<RemoteUserModel>> = flow {
         emit(ResponseState.Loading)
-        val user = database.getUserByUid(uid).toRemoteUserModel()
+        val user = database.getUserByUid(firebaseAuth.uid!!).toRemoteUserModel()
         emit(ResponseState.Success(user))
     }.catch { exception ->
         emit(ResponseState.Error(exception))
     }.flowOn(ioDispatcher)
 
+    override fun getUserByUid(uid: String): RemoteUserModel =
+        runBlocking(ioDispatcher) { database.getUserByUid(firebaseAuth.uid!!).toRemoteUserModel() }
+
     override fun getUserActivityType(): DetectedActivityEnum =
         runBlocking(ioDispatcher) { database.getUserActivityType(firebaseAuth.uid!!) }
 
-    override fun setUserActivityType(activityType: String) =
-        runBlocking(ioDispatcher) { database.setUserActivityType(firebaseAuth.uid!!, activityType) }
+    override fun setUserActivityType(activityType: DetectedActivityEnum) =
+        runBlocking(ioDispatcher) { database.setUserActivityType(firebaseAuth.uid!!, activityType.name) }
 
     override fun setUserLocation(locationModel: LocationModel) =
         runBlocking(ioDispatcher) {

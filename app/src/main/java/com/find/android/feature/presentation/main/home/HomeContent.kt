@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.find.android.FindActivity
+import com.find.android.core.util.recognition.enums.DetectedActivityEnum
 import com.find.android.feature.presentation.main.home.component.barSheet.DynamicIslandState
 import com.find.android.feature.presentation.main.home.component.barSheet.HomeBarDynamicIsland
 import com.find.android.feature.presentation.main.home.views.*
@@ -28,7 +29,13 @@ fun HomeContent(viewModel: HomeViewModel, navController: NavController) {
     val appBarProfileState = rememberSwipeableState(initialValue = AppBarSheetState.Collapsed)
     val appBarSettingState = rememberSwipeableState(initialValue = AppBarSheetState.Collapsed)
     val resultLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-        if (result.resultCode == RESULT_OK) viewModel.startLocationService(activity)
+        if (result.resultCode == RESULT_OK) {
+            viewModel.startLocationService(activity)
+            if (viewModel.userModel.value.activityType == DetectedActivityEnum.STILL)
+                viewModel.getCurrentLocation()
+            else
+                viewModel.requestLocationUpdates()
+        }
     }
 
     Box {

@@ -9,6 +9,7 @@ import com.find.android.core.domain.model.RemoteUserModel
 import com.find.android.core.domain.remote.storage.RemoteStorageService
 import com.find.android.core.domain.repository.StorageRepository
 import com.find.android.core.util.event.ResponseState
+import com.find.android.core.util.recognition.enums.DetectedActivityEnum
 import com.find.android.feature.util.extension.hasInternet
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -22,9 +23,22 @@ class StorageRepositoryImpl @Inject constructor(
     override fun insertUser(localUserModel: LocalUserModel) = if (connectivityManager.hasInternet())
         remoteStorageService.insertUser(localUserModel.toRemoteUserModel()) else localStorageService.insertUser(localUserModel)
 
-    override fun getUserByUid(uid: String): Flow<ResponseState<RemoteUserModel>> = if (connectivityManager.hasInternet())
-        remoteStorageService.getUserByUid(uid) else localStorageService.getUserById(uid)
+    override fun getUserFriendList(friendList: List<String>): List<RemoteUserModel> =
+        remoteStorageService.getUserFriendList(friendList)
 
-    override fun setUserLocation(locationModel: LocationModel) = if (connectivityManager.hasInternet())
-        remoteStorageService.setUserLocation(locationModel) else localStorageService.setUserLocation(locationModel)
+    override fun getUserByUid(uid: String): RemoteUserModel = if (connectivityManager.hasInternet())
+        remoteStorageService.getUserByUid(uid) else localStorageService.getUserByUid(uid)
+
+    override fun getCurrentUser(): Flow<ResponseState<RemoteUserModel>> = if (connectivityManager.hasInternet())
+        remoteStorageService.getCurrentUser() else localStorageService.getCurrentUser()
+
+    override fun setUserLocation(locationModel: LocationModel) {
+        remoteStorageService.setUserLocation(locationModel)
+        localStorageService.setUserLocation(locationModel)
+    }
+
+    override fun setUserActivityType(activityType: DetectedActivityEnum) {
+        remoteStorageService.setUserActivityType(activityType)
+        localStorageService.setUserActivityType(activityType)
+    }
 }

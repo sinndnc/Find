@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Looper
 import android.util.Log
 import com.find.android.core.domain.model.LocationModel
-import com.find.android.core.domain.repository.ActivityRecognitionRepository
+import com.find.android.core.domain.usecase.user.UserUseCase
 import com.find.android.core.util.annotation.IoDispatcher
 import com.find.android.core.util.event.ResponseState
 import com.find.android.core.util.recognition.enums.DetectedActivityEnum
@@ -22,9 +22,9 @@ import javax.inject.Inject
 
 @SuppressLint("MissingPermission")
 class LocationServiceImpl @Inject constructor(
+    private val userUseCase: UserUseCase,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val fusedLocationProviderClient: FusedLocationProviderClient,
-    private val activityRecognitionRepository: ActivityRecognitionRepository,
 ) : LocationService {
 
     override val locationRequest: LocationRequest
@@ -60,7 +60,7 @@ class LocationServiceImpl @Inject constructor(
         trySend(ResponseState.Loading)
         val callBack = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
-                if (activityRecognitionRepository.currentActivity.value == DetectedActivityEnum.STILL)
+                if (userUseCase.userModel.value.activityType == DetectedActivityEnum.STILL)
                     fusedLocationProviderClient.removeLocationUpdates(this)
                 else
                     locationResult.lastLocation?.let { trySend(ResponseState.Success(it.toLocationModel())) }

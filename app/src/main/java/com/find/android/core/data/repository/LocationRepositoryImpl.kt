@@ -19,10 +19,6 @@ class LocationRepositoryImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : LocationRepository {
 
-    init {
-        getLastKnownLocation()
-    }
-
     override fun getLastKnownLocation() {
         locationService.getLastKnownLocation().onEach { responseState ->
             responseState.onLoading {
@@ -56,7 +52,7 @@ class LocationRepositoryImpl @Inject constructor(
                     Log.d("LocationTest", "getCurrentLocation onLoading")
                 }.onSuccess { location ->
                     storageRepository.setUserLocation(location)
-                    Log.d("LocationTest", "getCurrentLocation ")
+                    Log.d("LocationTest", "getCurrentLocation: $location")
                 }.onError {
 
                 }

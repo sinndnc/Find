@@ -7,7 +7,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.SwipeableState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +34,8 @@ fun BoxScope.HomeAppBar(
 ) {
 
     val scope = rememberCoroutineScope()
-    // val bitmap = viewModel.userInfo.value.image?.convertToBitmap()
+    val userModel by remember { viewModel.userModel }
+    val bitmap = userModel.image?.convertToBitmap()
 
     Row(
         modifier = Modifier
@@ -43,38 +47,35 @@ fun BoxScope.HomeAppBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        //bitmap?.let {
-        Image(
-            //it.asImageBitmap(),
-            painterResource(R.drawable.ic_launcher_foreground),
-            contentDescription = "avatar",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(45.dp)
-                .clip(CircleShape)
-                .border(1.dp, Color.White, CircleShape)
-                .background(Color.DarkGray)
-                .clickable {
-                    scope.launch {
-                        viewModel.clickToProfile(appBarProfileState)
+        bitmap?.let {
+            Image(it.asImageBitmap(),
+                contentDescription = "avatar",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(45.dp)
+                    .clip(CircleShape)
+                    .border(1.dp, Color.White, CircleShape)
+                    .background(Color.DarkGray)
+                    .clickable {
+                        scope.launch {
+                            viewModel.clickToProfile(appBarProfileState)
+                        }
+                    })
+            Icon(
+                Icons.Rounded.Search,
+                contentDescription = "message",
+                modifier = Modifier
+                    .size(45.dp)
+                    .clip(CircleShape)
+                    .border(1.dp, Color.White, CircleShape)
+                    .background(Color.LightGray)
+                    .clickable {
+                        scope.launch {
+                            viewModel.clickToSetting(appBarSettingState)
+                        }
                     }
-                }
-        )
-        //  }
-        Image(
-            painter = painterResource(R.drawable.ic_launcher_foreground),
-            contentDescription = "message",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(45.dp)
-                .clip(CircleShape)
-                .background(Color.DarkGray)
-                .clickable {
-                    scope.launch {
-                        viewModel.clickToSetting(appBarSettingState)
-                    }
-                }
-        )
+                    .padding(5.dp)
+            )
+        }
     }
-
 }

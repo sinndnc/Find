@@ -9,13 +9,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.find.android.core.util.theme.ThemeState
+import com.find.android.feature.navigation.Content
 import com.find.android.feature.presentation.main.profile.ProfileViewModel
 import com.find.android.feature.presentation.main.profile.model.profile.ProfileColumnItems
 import com.find.android.feature.presentation.main.profile.model.profile.ProfileRowItemEnum
 
 @Composable
-fun ProfileListsRow(viewModel: ProfileViewModel) {
+fun ProfileListsRow(viewModel: ProfileViewModel, navController: NavController) {
 
     val theme = viewModel.themeSetting.themeState.collectAsState()
     val categories = listOf(ProfileColumnItems.Preferences, ProfileColumnItems.Privacy)
@@ -58,7 +60,9 @@ fun ProfileListsRow(viewModel: ProfileViewModel) {
                                     Icon(Icons.Rounded.KeyboardArrowRight, contentDescription = "arrow")
                                 }
                             }
-                        )
+                        ){
+                            navController.navigate(item.route)
+                        }
                     }
                     ProfileRowItemEnum.TextArrowRight -> {
                         ProfileItemRow(
@@ -70,7 +74,7 @@ fun ProfileListsRow(viewModel: ProfileViewModel) {
                                     Spacer(modifier = Modifier.width(5.dp))
                                     Icon(Icons.Rounded.KeyboardArrowRight, contentDescription = "arrow")
                                 }
-                            }, enabled = true
+                            }
                         ) {
                             openDialog.value = true
                         }

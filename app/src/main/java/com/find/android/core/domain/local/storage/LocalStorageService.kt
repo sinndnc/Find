@@ -9,14 +9,16 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocalStorageService {
 
-    fun getUserById(uid: String): Flow<ResponseState<RemoteUserModel>>
+    fun getUserByUid(uid: String): RemoteUserModel
 
     fun getUserActivityType(): DetectedActivityEnum
 
-    fun setUserActivityType(activityType: String)
+    fun setUserActivityType(activityType: DetectedActivityEnum)
 
     fun insertUser(localUserModel: LocalUserModel)
 
     fun setUserLocation(locationModel: LocationModel)
+
+    fun getCurrentUser(): Flow<ResponseState<RemoteUserModel>>
 
 }
