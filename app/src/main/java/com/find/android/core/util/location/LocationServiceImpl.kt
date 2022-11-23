@@ -3,8 +3,8 @@ package com.find.android.core.util.location
 import android.annotation.SuppressLint
 import android.os.Looper
 import android.util.Log
-import com.find.android.core.domain.model.LocationModel
-import com.find.android.core.domain.usecase.user.UserUseCase
+import com.find.android.core.data.local.room.entity.LocationModel
+import com.find.android.core.domain.repository.ActivityRecognitionRepository
 import com.find.android.core.util.annotation.IoDispatcher
 import com.find.android.core.util.event.ResponseState
 import com.find.android.core.util.recognition.enums.DetectedActivityEnum
@@ -22,9 +22,9 @@ import javax.inject.Inject
 
 @SuppressLint("MissingPermission")
 class LocationServiceImpl @Inject constructor(
-    private val userUseCase: UserUseCase,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val fusedLocationProviderClient: FusedLocationProviderClient,
+    private val activityRecognitionRepository: ActivityRecognitionRepository
 ) : LocationService {
 
     override val locationRequest: LocationRequest
@@ -36,7 +36,7 @@ class LocationServiceImpl @Inject constructor(
             fastestInterval = 500
         }
 
-    override fun getLastKnownLocation(): Flow<ResponseState<LocationModel>> = flow<ResponseState<LocationModel>> {
+    override fun getLastKnownLocation(): Flow<ResponseState<LocationModel>> = flow {
         emit(ResponseState.Loading)
         val lastLocation = fusedLocationProviderClient.lastLocation.await()
         if (lastLocation != null) emit(ResponseState.Success(lastLocation.toLocationModel()))
@@ -46,21 +46,20 @@ class LocationServiceImpl @Inject constructor(
     }.flowOn(ioDispatcher)
 
 
-    override fun getCurrentLocation(): Flow<ResponseState<LocationModel>> = flow<ResponseState<LocationModel>> {
+    override fun getCurrentLocation(): Flow<ResponseState<LocationModel>> = flow {
         emit(ResponseState.Loading)
-        val location =
-            fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, CancellationCallback()).await()
+        val location = fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, CancellationCallback()).await()
         if (location != null) emit(ResponseState.Success(location.toLocationModel()))
     }.catch { exception ->
         emit(ResponseState.Error(exception))
     }.flowOn(ioDispatcher)
 
 
-    override fun requestLocationUpdates(): Flow<ResponseState<LocationModel>> = callbackFlow<ResponseState<LocationModel>> {
+    override fun requestLocationUpdates(): Flow<ResponseState<LocationModel>> = callbackFlow {
         trySend(ResponseState.Loading)
         val callBack = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
-                if (userUseCase.userModel.value.activityType == DetectedActivityEnum.STILL)
+                if (activityRecognitionRepository.currentActivity.value == DetectedActivityEnum.STILL)
                     fusedLocationProviderClient.removeLocationUpdates(this)
                 else
                     locationResult.lastLocation?.let { trySend(ResponseState.Success(it.toLocationModel())) }

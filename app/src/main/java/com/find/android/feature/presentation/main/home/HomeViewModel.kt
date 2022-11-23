@@ -6,11 +6,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.SwipeableState
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.find.android.core.domain.model.RemoteUserModel
 import com.find.android.core.domain.usecase.location.setting.LocationSettingUseCase
-import com.find.android.core.domain.usecase.user.UserUseCase
 import com.find.android.core.util.base.BaseViewModel
 import com.find.android.feature.presentation.main.home.views.AppBarSheetState
 import com.google.android.gms.common.api.ResolvableApiException
@@ -24,15 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 @OptIn(ExperimentalMaterialApi::class)
 class HomeViewModel @Inject constructor(
-    userUseCase: UserUseCase,
     private val locationSettingUseCase: LocationSettingUseCase,
 ) : BaseViewModel() {
-
-    private val _userModel: MutableState<RemoteUserModel> = userUseCase.userModel
-    override val userModel: MutableState<RemoteUserModel> = _userModel
-
-    private var _friendList: SnapshotStateList<RemoteUserModel> = userUseCase.friendList
-    override var friendList: SnapshotStateList<RemoteUserModel> = _friendList
 
     suspend fun clickToProfile(state: SwipeableState<AppBarSheetState>) {
         state.animateTo(AppBarSheetState.Profile)

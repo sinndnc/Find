@@ -1,24 +1,17 @@
 package com.find.android.core.domain.remote.storage
 
-import com.find.android.core.domain.model.LocationModel
-import com.find.android.core.domain.model.RemoteUserModel
-import com.find.android.core.util.event.ResponseState
-import com.find.android.core.util.recognition.enums.DetectedActivityEnum
-import kotlinx.coroutines.flow.Flow
+import com.find.android.core.data.local.room.entity.LocationModel
+import com.find.android.core.domain.model.UserModel
 
 interface RemoteStorageService {
 
-    fun getUserByUid(uid: String): RemoteUserModel
+    fun getUserByUid(uid: String): UserModel
 
-    fun getCurrentUser(): Flow<ResponseState<RemoteUserModel>>
+    fun insertUser(user: UserModel)
 
-    fun insertUser(user: RemoteUserModel)
+    fun getUserLocation():LocationModel
 
     fun getUserImage(uid: String): ByteArray
 
     fun setUserLocation(locationModel: LocationModel)
-
-    fun setUserActivityType(activityType: DetectedActivityEnum)
-
-    fun getUserFriendList(friendList: List<String>): List<RemoteUserModel>
 }

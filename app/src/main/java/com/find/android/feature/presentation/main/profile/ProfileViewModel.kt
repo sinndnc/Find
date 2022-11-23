@@ -19,7 +19,7 @@ class ProfileViewModel @Inject constructor(
     val themeSetting: ThemeSetting,
 ) : ViewModel() {
 
-    val userInfo = userUseCase.userModel
+    val userInfo = userUseCase.remoteUserModel
     val openDialog = mutableStateOf(false)
 
     @OptIn(ExperimentalMaterialApi::class)
