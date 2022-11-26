@@ -4,10 +4,12 @@ sealed class Content(val route: String) {
 
     object Splash : Content("splash")
     object OnBoard : Content("onBoard")
-    object Login : Content("login")
     object SignUp : Content("register")
+    object Login : Content("login")
     object Home : Content("home")
     object Notification : Content("notifications")
+    object Language : Content("language")
+    object Privacy : Content("privacy")
     object NotFound : Content("not_found")
 
     companion object {

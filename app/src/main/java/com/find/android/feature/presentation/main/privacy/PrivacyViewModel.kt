@@ -1,4 +1,4 @@
-package com.find.android.feature.presentation.main.notification
+package com.find.android.feature.presentation.main.privacy
 
 import androidx.compose.runtime.MutableState
 import com.find.android.core.domain.model.RemoteUserModel
@@ -8,7 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class NotificationViewModel @Inject constructor(
+class PrivacyViewModel @Inject constructor(
     userUseCase: UserUseCase,
 ) : BaseViewModel() {
 

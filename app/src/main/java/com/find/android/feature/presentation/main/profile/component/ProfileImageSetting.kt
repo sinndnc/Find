@@ -16,16 +16,14 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.find.android.feature.presentation.main.profile.PersistenceImageSheetState
 import com.find.android.feature.presentation.main.profile.ProfileViewModel
 import com.find.android.feature.util.extension.convertToBitmap
 
 @Composable
-@OptIn(ExperimentalMaterialApi::class)
-fun ProfileImageSetting(viewModel: ProfileViewModel, imageState: SwipeableState<PersistenceImageSheetState>) {
+fun ProfileImageSetting(viewModel: ProfileViewModel) {
 
     val typography = MaterialTheme.typography
-    val userModel by remember { viewModel.userInfo }
+    val userModel by remember { viewModel.userModel }
     val image = userModel.image?.convertToBitmap()
     val name = userModel.name
 
@@ -50,7 +48,7 @@ fun ProfileImageSetting(viewModel: ProfileViewModel, imageState: SwipeableState<
         Column(
             modifier = Modifier.fillMaxWidth(0.8f)
         ) {
-            name?.let { Text(it, style = typography.h6, fontWeight = FontWeight.SemiBold) }
+            Text(name, style = typography.h6, fontWeight = FontWeight.SemiBold)
             Text("Senior Developer", style = typography.caption, fontWeight = FontWeight.Medium, color = Color.Gray)
         }
     }

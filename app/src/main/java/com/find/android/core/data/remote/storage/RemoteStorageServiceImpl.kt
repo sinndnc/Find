@@ -28,7 +28,6 @@ class RemoteStorageServiceImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : RemoteStorageService {
 
-
     override fun getCurrentUser(): Flow<ResponseState<RemoteUserModel>> = flow {
         emit(ResponseState.Loading)
         val response = firestore.collection(FirestoreConstants.USER_COLLECTION).document(firebaseAuth.uid!!).get().await()
@@ -40,11 +39,11 @@ class RemoteStorageServiceImpl @Inject constructor(
 
     override fun getUserByUid(uid: String): RemoteUserModel = runBlocking(ioDispatcher) {
         val response = firestore.collection(FirestoreConstants.USER_COLLECTION).document(uid).get().await()
-        response.toObject(RemoteUserModel::class.java)!!
+        response.toObject(RemoteUserModel::class.java)!!.apply { image = getUserImage(uid) }
     }
 
     override fun getUserImage(uid: String): ByteArray = runBlocking(ioDispatcher) {
-        val response = storage.child("sindnnc.jpg").getBytes(1024 * 1024).await()
+        val response = storage.child("${FirestoreConstants.USER_COLLECTION}/$uid.jpg").getBytes(1024 * 1024).await()
         if (response.isNotEmpty()) response else byteArrayOf()
     }
 

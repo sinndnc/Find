@@ -24,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 @OptIn(ExperimentalMaterialApi::class)
 class HomeViewModel @Inject constructor(
-   userUseCase: UserUseCase,
+    userUseCase: UserUseCase,
     private val locationSettingUseCase: LocationSettingUseCase,
 ) : BaseViewModel() {
 
@@ -35,7 +35,7 @@ class HomeViewModel @Inject constructor(
     override var friendList: SnapshotStateList<RemoteUserModel> = _friendList
 
     suspend fun clickToProfile(state: SwipeableState<AppBarSheetState>) {
-        state.animateTo(AppBarSheetState.Profile)
+        state.snapTo(AppBarSheetState.Profile)
     }
 
     suspend fun clickToSetting(state: SwipeableState<AppBarSheetState>) {

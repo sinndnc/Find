@@ -1,4 +1,4 @@
-package com.find.android.feature.presentation.main.notification
+package com.find.android.feature.presentation.main.language
 
 import androidx.compose.runtime.MutableState
 import com.find.android.core.domain.model.RemoteUserModel
@@ -8,11 +8,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class NotificationViewModel @Inject constructor(
+class LanguageViewModel @Inject constructor(
     userUseCase: UserUseCase,
 ) : BaseViewModel() {
 
     override val userModel: MutableState<RemoteUserModel> = userUseCase.userModel
     override val friendList: MutableList<RemoteUserModel> = userUseCase.friendList
+
 
 }

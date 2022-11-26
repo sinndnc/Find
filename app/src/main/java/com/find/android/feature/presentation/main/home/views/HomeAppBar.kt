@@ -18,11 +18,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.find.android.R
 import com.find.android.feature.presentation.main.home.HomeViewModel
 import com.find.android.feature.util.extension.convertToBitmap
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
@@ -57,7 +56,7 @@ fun BoxScope.HomeAppBar(
                     .border(1.dp, Color.White, CircleShape)
                     .background(Color.DarkGray)
                     .clickable {
-                        scope.launch {
+                        scope.launch(Dispatchers.Main) {
                             viewModel.clickToProfile(appBarProfileState)
                         }
                     })

@@ -10,20 +10,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.find.android.core.util.theme.ThemeState
-import com.find.android.feature.navigation.Content
 import com.find.android.feature.presentation.main.profile.ProfileViewModel
 import com.find.android.feature.presentation.main.profile.model.profile.ProfileColumnItems
 import com.find.android.feature.presentation.main.profile.model.profile.ProfileRowItemEnum
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileListsRow(viewModel: ProfileViewModel, navController: NavController) {
 
+    val coroutineScope = rememberCoroutineScope()
     val theme = viewModel.themeSetting.themeState.collectAsState()
     val categories = listOf(ProfileColumnItems.Preferences, ProfileColumnItems.Privacy)
-    val openDialog = viewModel.openDialog
-
-    if (openDialog.value) CustomDialog(openDialog)
 
     for (category in categories) {
         Column(
@@ -34,49 +33,29 @@ fun ProfileListsRow(viewModel: ProfileViewModel, navController: NavController) {
             Text(text = category.name, color = Color.Gray)
             Spacer(Modifier.height(5.dp))
             for (item in category.items) {
-                when (item.type) {
-                    ProfileRowItemEnum.Switch -> {
-                        ProfileItemRow(
-                            item.name,
-                            item.icon,
-                            icon = {
-                                Switch(
-                                    checked = theme.value == ThemeState.Dark, onCheckedChange = {
-                                        viewModel.toggleTheme()
-                                    }, colors = SwitchDefaults.colors(
-                                        uncheckedThumbColor = Color.DarkGray,
-                                        uncheckedTrackColor = Color.Gray,
-                                    )
-                                )
+                ProfileItemRow(
+                    item.name,
+                    item.icon,
+                    enabled = item.type != ProfileRowItemEnum.Switch,
+                    icon = {
+                        if (item.type == ProfileRowItemEnum.Switch)
+                            Switch(checked = theme.value == ThemeState.Dark, onCheckedChange = {
+                                viewModel.toggleTheme()
+                            })
+                        else
+                            Row {
+                                Text(text = if (item.type == ProfileRowItemEnum.TextArrowRight) item.name else "")
+                                Icon(Icons.Rounded.KeyboardArrowRight, contentDescription = "arrow")
                             }
-                        )
                     }
-                    ProfileRowItemEnum.ArrowRight -> {
-                        ProfileItemRow(
-                            item.name,
-                            item.icon,
-                            icon = {
-                                Row {
-                                    Icon(Icons.Rounded.KeyboardArrowRight, contentDescription = "arrow")
-                                }
+                ) {
+                    coroutineScope.launch{
+                        navController.navigate(item.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                inclusive = true
+                                saveState = true
                             }
-                        ){
-                            navController.navigate(item.route)
-                        }
-                    }
-                    ProfileRowItemEnum.TextArrowRight -> {
-                        ProfileItemRow(
-                            item.name,
-                            item.icon,
-                            icon = {
-                                Row {
-                                    Text(text = "Türkçe")
-                                    Spacer(modifier = Modifier.width(5.dp))
-                                    Icon(Icons.Rounded.KeyboardArrowRight, contentDescription = "arrow")
-                                }
-                            }
-                        ) {
-                            openDialog.value = true
+                            launchSingleTop = true
                         }
                     }
                 }

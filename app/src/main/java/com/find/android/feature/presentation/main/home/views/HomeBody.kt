@@ -16,11 +16,9 @@ import com.find.android.feature.util.extension.toLatLng
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 import kotlinx.coroutines.launch
-
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
@@ -78,15 +76,20 @@ fun HomeBody(
             )
         }
         for (friend in friendList) {
-            Marker(
-                state = MarkerState(friend.location.toLatLng()),
-                onClick = {
-                    coroutineScope.launch {
-                        cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(friend.location.toLatLng(), 16f))
-                    }
-                    true
-                },
-            )
+            friend.image?.let {
+                Marker(
+                    icon = BitmapDescriptorFactory.fromBitmap(
+                        it.convertToBitmap().getCroppedBitmap()!!
+                    ),
+                    state = MarkerState(friend.location.toLatLng()),
+                    onClick = {
+                        coroutineScope.launch {
+                            cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(friend.location.toLatLng(), 16f))
+                        }
+                        true
+                    },
+                )
+            }
         }
 
     }

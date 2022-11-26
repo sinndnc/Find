@@ -38,16 +38,16 @@ fun HomeContent(viewModel: HomeViewModel, navController: NavController) {
         }
     }
 
+    LifeCycleEvent(
+        onStart = { viewModel.checkLocationIsEnabled(resultLauncher, activity) },
+        onStop = { viewModel.stopLocationService(activity) })
+
     Box {
         HomeBody(viewModel, bottomState, dynamicIslandState)
         HomeBarDynamicIsland(viewModel, dynamicIslandState)
         HomeAppBar(viewModel, appBarSettingState, appBarProfileState)
         HomeBottomBar(navController, appBarProfileState, appBarSettingState, bottomState)
     }
-
-    LifeCycleEvent(
-        onStart = { viewModel.checkLocationIsEnabled(resultLauncher, activity) },
-        onStop = { viewModel.stopLocationService(activity) })
 
     BackHandler {
         when {
