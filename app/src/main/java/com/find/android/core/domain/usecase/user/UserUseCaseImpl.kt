@@ -28,11 +28,15 @@ class UserUseCaseImpl @Inject constructor(
 ) : UserUseCase {
 
     private val currentUser = runBlocking(ioDispatcher) { database.getUserByUid(firebaseAuth.uid!!).toRemoteUserModel() }
-    private val _userModel = mutableStateOf(currentUser)
+    private val _userModel: MutableState<RemoteUserModel> = mutableStateOf(currentUser)
     override val userModel: MutableState<RemoteUserModel> = _userModel
 
     private var _friendList: SnapshotStateList<RemoteUserModel> = mutableStateListOf()
     override var friendList: SnapshotStateList<RemoteUserModel> = _friendList
+
+    init {
+        getUserRealTimeUpdate()
+    }
 
     override fun getUserInformation() {
         storageRepository.getCurrentUser().onEach { responseState ->
@@ -48,4 +52,16 @@ class UserUseCaseImpl @Inject constructor(
     }
 
 
+    private fun getUserRealTimeUpdate() {
+        storageRepository.getUserRealTimeUpdate().onEach { responseState ->
+            responseState.onLoading {
+
+            }.onSuccess { currentUser ->
+                _userModel.value = currentUser
+                Log.d("UserTest", "getUserInformation $currentUser")
+            }.onError {
+                Log.d("UserTest", "getUserInformation $it")
+            }
+        }.launchIn(coroutineScope)
+    }
 }

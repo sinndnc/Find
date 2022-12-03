@@ -10,13 +10,15 @@ import com.find.android.core.util.event.ResponseState
 import com.find.android.core.util.recognition.enums.DetectedActivityEnum
 import com.find.android.feature.util.extension.toGeoPoint
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -35,6 +37,23 @@ class RemoteStorageServiceImpl @Inject constructor(
         if (response.exists()) emit(ResponseState.Success(user))
     }.catch { exception ->
         emit(ResponseState.Error(exception))
+    }.flowOn(ioDispatcher)
+
+    override fun getUserRealTimeUpdate(): Flow<ResponseState<RemoteUserModel>> = callbackFlow {
+        trySend(ResponseState.Loading)
+        val userRef = firestore.collection(FirestoreConstants.USER_COLLECTION).document(firebaseAuth.uid!!)
+        val eventListener = EventListener<DocumentSnapshot> { snapshot, error ->
+            if (error != null) return@EventListener
+            if (snapshot != null && snapshot.exists()) {
+                val currentSnapshot = snapshot.toObject(RemoteUserModel::class.java)!!.apply { image = getUserImage(uid) }
+                trySend(ResponseState.Success(currentSnapshot))
+            }
+        }
+        userRef.addSnapshotListener(eventListener)
+        awaitClose { userRef.addSnapshotListener(eventListener).remove() }
+    }.catch { exception ->
+        Log.d("LocationTest", "catch: ${exception.cause.toString()} ")
+        emit(ResponseState.Error(exception.cause))
     }.flowOn(ioDispatcher)
 
     override fun getUserByUid(uid: String): RemoteUserModel = runBlocking(ioDispatcher) {

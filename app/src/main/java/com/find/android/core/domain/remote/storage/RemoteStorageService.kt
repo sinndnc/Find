@@ -12,6 +12,8 @@ interface RemoteStorageService {
 
     fun getCurrentUser(): Flow<ResponseState<RemoteUserModel>>
 
+    fun getUserRealTimeUpdate(): Flow<ResponseState<RemoteUserModel>>
+
     fun insertUser(user: RemoteUserModel)
 
     fun getUserImage(uid: String): ByteArray

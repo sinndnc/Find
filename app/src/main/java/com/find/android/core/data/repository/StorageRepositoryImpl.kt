@@ -33,6 +33,9 @@ class StorageRepositoryImpl @Inject constructor(
     override fun getCurrentUser(): Flow<ResponseState<RemoteUserModel>> = if (connectivityManager.hasInternet())
         remoteStorageService.getCurrentUser() else localStorageService.getCurrentUser()
 
+    override fun getUserRealTimeUpdate(): Flow<ResponseState<RemoteUserModel>> =
+        remoteStorageService.getUserRealTimeUpdate()
+
     override fun setUserLocation(locationModel: LocationModel) {
         remoteStorageService.setUserLocation(locationModel)
         localStorageService.setUserLocation(locationModel)

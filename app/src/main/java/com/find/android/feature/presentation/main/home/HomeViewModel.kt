@@ -24,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 @OptIn(ExperimentalMaterialApi::class)
 class HomeViewModel @Inject constructor(
-    userUseCase: UserUseCase,
+    val userUseCase: UserUseCase,
     private val locationSettingUseCase: LocationSettingUseCase,
 ) : BaseViewModel() {
 

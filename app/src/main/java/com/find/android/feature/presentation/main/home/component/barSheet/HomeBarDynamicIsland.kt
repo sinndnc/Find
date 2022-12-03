@@ -1,11 +1,13 @@
 package com.find.android.feature.presentation.main.home.component.barSheet
 
+import android.util.Log
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -13,8 +15,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.find.android.feature.presentation.main.home.HomeViewModel
+import com.find.android.feature.util.extension.detectModeIcon
+import java.util.*
 
 enum class DynamicIslandState { Collapsed, Expanded }
 
@@ -24,8 +29,8 @@ fun BoxScope.HomeBarDynamicIsland(
     state: MutableState<DynamicIslandState>
 ) {
 
+    val userModel = viewModel.userModel
     val transition = updateTransition(state, label = "DynamicIsland")
-    //val currentActivity by remember { viewModel.currentActivity }
     val height = transition.animateFloat(label = "DynamicIslandAnimateHeight") { dynamicIslandState ->
         when (dynamicIslandState.value) {
             DynamicIslandState.Collapsed -> 0.05F
@@ -54,9 +59,11 @@ fun BoxScope.HomeBarDynamicIsland(
             },
         contentAlignment = Alignment.Center,
     ) {
+        Log.d("LocationTest", "ada: $userModel")
         Row {
             Text("mode: ", style = MaterialTheme.typography.body2)
-            //Icon(painterResource(currentActivity.detectModeIcon()), contentDescription = "")
+            Icon(painterResource(userModel.value.activityType.detectModeIcon()), contentDescription = "")
+            Text(userModel.value.activityType.name.lowercase(Locale.getDefault()))
         }
     }
 }
